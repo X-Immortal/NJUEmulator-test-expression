@@ -3,8 +3,9 @@ export MODULE := Lab1
 CC = gcc
 CFLAGS += -O1 -std=gnu11 -ggdb -Wall -Werror -Wno-unused-result -Wno-unused-value -Wno-unused-variable
 INCLUDES = -Iinclude
-SRCS = src/main.c src/expr.c
-OBJS = main.o expr.o
+SRCS := $(wildcard src/*.c)
+DEPS := $(wildcard include/*.h) $(SRCS)
+OBJS := $(SRCS:src/%.c=%.o)
 TARGET = gen-expr
 
 .PHONY: all git test clean commit-and-make
@@ -17,10 +18,7 @@ all: $(TARGET)
 $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) $(INCLUDES) $^ -o $@
 
-main.o: src/main.c include/expr.h
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
-
-expr.o: src/expr.c include/expr.h
+%.o: src/%.c $(DEPS)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
