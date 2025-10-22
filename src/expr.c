@@ -54,8 +54,14 @@ static int gen_hex(char *buf, size_t buf_size, size_t offset) {
 }
 
 __attribute__((unused))
-static bool gen_op(char *buf, size_t buf_size, size_t offset) {
-    return false;
+static int gen_op(char *buf, size_t buf_size, size_t offset) {
+    static const char ops[] = {'+', '-', '*', '/'};
+    if (buf_size - offset - 1 < 1) {
+        return 0;
+    }
+    buf[offset] = ops[random_int(ARRLEN(ops))];
+    buf[offset + 1] = '\0';
+    return 1;
 }
 
 __attribute__((unused))
@@ -90,6 +96,7 @@ static bool gen(char *buf, size_t buf_size, size_t offset) {
 
 void gen_rand_expr(char *buf, size_t buf_size) {
     // 生成随机表达式的逻辑（原始代码未实现，可后续补充）
-    // int index = gen_decimal(buf, buf_size, 0);
-    gen_hex(buf, buf_size, 0);
+    int index = gen_decimal(buf, buf_size, 0);
+    index = gen_op(buf, buf_size, index);
+    gen_hex(buf, buf_size, index);
 }
