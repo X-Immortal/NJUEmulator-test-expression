@@ -91,5 +91,5 @@ static bool gen(char *buf, size_t buf_size, size_t offset) {
 void gen_rand_expr(char *buf, size_t buf_size) {
     // 生成随机表达式的逻辑（原始代码未实现，可后续补充）
     // int index = gen_decimal(buf, buf_size, 0);
-    gen_hex(buf, buf_size, index);
+    gen_hex(buf, buf_size, 0);
 }
