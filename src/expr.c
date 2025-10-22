@@ -12,7 +12,7 @@ static inline u_int32_t random_int_range(u_int32_t begin, u_int32_t end) {
         printf("Invalid range: from %u to %u\n", begin, end);
         return 0;
     }
-    return rand() % (end - begin) + begin;
+    return (rand() % (end - begin)) + begin;
 }
 
 __attribute__((unused))
