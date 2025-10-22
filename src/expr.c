@@ -6,10 +6,12 @@
 
 #define ARRLEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
+__attribute__((unused))
 static inline u_int32_t random_int(u_int32_t n) {
     return random_int_range(0, n);
 }
 
+__attribute__((unused))
 static inline u_int32_t random_int_range(u_int32_t begin, u_int32_t end) {
     if (end < begin) {
         printf("Invalid range: from %u to %u\n", begin, end);
@@ -32,34 +34,41 @@ static int gen_decimal(char *buf, size_t buf_size, size_t offset) {
     return max;
 }
 
+__attribute__((unused))
 static bool gen_hex(char *buf, size_t buf_size, size_t offset) {
     return false;
 }
 
+__attribute__((unused))
 static bool gen_op(char *buf, size_t buf_size, size_t offset) {
     return false;
 }
 
+__attribute__((unused))
 static bool gen_reg(char *buf, size_t buf_size, size_t offset) {
 
     return false;
 }
 
+__attribute__((unused))
 static bool gen_addr(char *buf, size_t buf_size, size_t offset) {
 
     return false;
 }
 
+__attribute__((unused))
 static bool gen_left_paran(char *buf, size_t buf_size, size_t offset) {
 
     return false;
 }
 
+__attribute__((unused))
 static bool gen_right_paran(char *buf, size_t buf_size, size_t offset) {
 
     return false;
 }
 
+__attribute__((unused))
 static bool gen(char *buf, size_t buf_size, size_t offset) {
     
     return false;
