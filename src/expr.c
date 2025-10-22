@@ -1,13 +1,66 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include "../include/expr.h"
+
+#define ARRLEN(arr) (sizeof(arr) / sizeof(arr[0]))
+
+static inline u_int32_t random_int(u_int32_t n) {
+    return random_int_range(0, n);
+}
+
+static inline u_int32_t random_int_range(u_int32_t begin, u_int32_t end) {
+    if (end < begin) {
+        printf("Invalid range: from %u to %u\n", begin, end);
+        return 0;
+    }
+    return rand() % (end - begin) + begin;
+}
+
+static int gen_decimal(char *buf, size_t buf_size, size_t offset) {
+    static const u_int32_t range[] = {
+        1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000
+    };
+    int max = random_int_range(1, ARRLEN(range));
+    int min = max - 1;
+    if (buf_size - offset - 1 < max) {
+        return 0;
+    }
+    u_int32_t num = random_int_range(range[min], range[max]);
+    sprintf(buf + offset, "%d", num);
+    return max;
+}
+
+static bool gen_hex(char *buf, size_t buf_size, size_t offset) {
+
+}
+
+static bool gen_op(char *buf, size_t buf_size, size_t offset) {
+
+}
+
+static bool gen_reg(char *buf, size_t buf_size, size_t offset) {
+
+}
+
+static bool gen_addr(char *buf, size_t buf_size, size_t offset) {
+
+}
+
+static bool gen_left_paran(char *buf, size_t buf_size, size_t offset) {
+
+}
+
+static bool gen_right_paran(char *buf, size_t buf_size, size_t offset) {
+
+}
+
+static bool gen(char *buf, size_t buf_size, size_t offset) {
+    
+}
 
 void gen_rand_expr(char *buf, size_t buf_size) {
     // 生成随机表达式的逻辑（原始代码未实现，可后续补充）
-    buf[0] = '1';
-    buf[1] = '+';
-    buf[2] = '1';
-    buf[3] = '\0';
-    
+    gen_decimal(buf, buf_size, 0);
 }
