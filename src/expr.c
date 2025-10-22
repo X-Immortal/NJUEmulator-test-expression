@@ -49,7 +49,7 @@ static int gen_hex(char *buf, size_t buf_size, size_t offset) {
     if (buf_size - offset - 1 < len) {
         return 0;
     }
-    memcpy(buf + offset, temp, len * sizeof(*buf));
+    strcpy(buf + offset, temp);
     return len;
 }
 
