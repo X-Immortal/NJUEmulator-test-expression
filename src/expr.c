@@ -33,31 +33,36 @@ static int gen_decimal(char *buf, size_t buf_size, size_t offset) {
 }
 
 static bool gen_hex(char *buf, size_t buf_size, size_t offset) {
-
+    return false;
 }
 
 static bool gen_op(char *buf, size_t buf_size, size_t offset) {
-
+    return false;
 }
 
 static bool gen_reg(char *buf, size_t buf_size, size_t offset) {
 
+    return false;
 }
 
 static bool gen_addr(char *buf, size_t buf_size, size_t offset) {
 
+    return false;
 }
 
 static bool gen_left_paran(char *buf, size_t buf_size, size_t offset) {
 
+    return false;
 }
 
 static bool gen_right_paran(char *buf, size_t buf_size, size_t offset) {
 
+    return false;
 }
 
 static bool gen(char *buf, size_t buf_size, size_t offset) {
     
+    return false;
 }
 
 void gen_rand_expr(char *buf, size_t buf_size) {
