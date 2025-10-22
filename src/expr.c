@@ -65,9 +65,20 @@ static int gen_op(char *buf, size_t buf_size, size_t offset) {
 }
 
 __attribute__((unused))
-static bool gen_reg(char *buf, size_t buf_size, size_t offset) {
-
-    return false;
+static int gen_reg(char *buf, size_t buf_size, size_t offset) {
+    static const char *regs[] = {
+        "$0", "ra", "sp", "gp", "tp", "t0", "t1", "t2",
+        "s0", "s1", "a0", "a1", "a2", "a3", "a4", "a5",
+        "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7",
+        "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"
+    };
+    int index = random_int(ARRLEN(regs));
+    int len = strlen(regs[index]) + 1;
+    if (buf_size - offset - 1 < len) {
+        return 0;
+    }
+    sprintf(buf + offset, "$%s", regs[index]);
+    return len;
 }
 
 __attribute__((unused))
@@ -96,7 +107,8 @@ static bool gen(char *buf, size_t buf_size, size_t offset) {
 
 void gen_rand_expr(char *buf, size_t buf_size) {
     // 生成随机表达式的逻辑（原始代码未实现，可后续补充）
-    int index = gen_decimal(buf, buf_size, 0);
-    index += gen_op(buf, buf_size, index);
-    gen_hex(buf, buf_size, index);
+    // int index = gen_decimal(buf, buf_size, 0);
+    // index += gen_op(buf, buf_size, index);
+    // gen_hex(buf, buf_size, index);
+    gen_reg(buf, buf_size, 0);
 }
