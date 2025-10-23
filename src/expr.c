@@ -133,7 +133,7 @@ static size_t gen_space(char *buf, size_t buf_size, size_t offset) {
 __attribute__((unused))
 static size_t gen(char *buf, size_t buf_size, size_t offset) {
     if (offset >= buf_size) {
-        return 0;
+        gen(buf, buf_size, 0);
     }
 
     size_t len = 0;
