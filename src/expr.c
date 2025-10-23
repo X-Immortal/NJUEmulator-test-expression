@@ -28,14 +28,12 @@ static size_t gen_decimal(char *buf, size_t buf_size, size_t offset) {
     };
 
     int max = random_int_range(1, ARRLEN(range));
-    printf("max: %d\n", max);
     size_t empty_size = buf_size - offset - 1;
     max = max > empty_size ? empty_size : max;
-    printf("real max: %d\n", max);
     int min = max - 1;
 
     u_int32_t num = random_int_range(range[min], range[max]);
-    printf("decimal: %u\n", num);
+    // printf("decimal: %u\n", num);
     sprintf(buf + offset, "%u", num);
     return max;
 }
@@ -140,29 +138,29 @@ static size_t gen_space(char *buf, size_t buf_size, size_t offset) {
 
 __attribute__((unused))
 static size_t gen(char *buf, size_t buf_size, size_t offset) {
-    if (offset >= buf_size) {
+    if (offset >= buf_size - 1) {
         gen(buf, buf_size, 0);
     }
 
     size_t len = 0;
     switch (random_int(4)) {
         case 0:
-            printf("choose: 0\n");
+            // printf("choose: 0\n");
             return gen_decimal(buf, buf_size, offset);
             break;
         case 1:
-            printf("choose: 1\n");
+            // printf("choose: 1\n");
             return gen_hex(buf, buf_size, offset);
             break;
         case 2:
-            printf("choose: 2\n");
+            // printf("choose: 2\n");
             len += gen_left_paran(buf, buf_size, offset + len);
             len += gen(buf, buf_size, offset + len);
             len += gen_right_paran(buf, buf_size, offset + len);
             return len;
             break;
         case 3:
-            printf("choose: 3\n");
+            // printf("choose: 3\n");
             len += gen(buf, buf_size, offset + len);
             len += gen_op(buf, buf_size, offset + len);
             len += gen(buf, buf_size, offset + len);
