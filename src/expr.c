@@ -149,6 +149,8 @@ static size_t gen(char *buf, size_t buf_size, size_t offset) {
             offset += gen_op(buf, buf_size, offset);
             return gen(buf, buf_size, offset);
             break;
+        default:
+            return 0;
     }
 }
 
