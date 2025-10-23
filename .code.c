@@ -1,6 +1,6 @@
 #include <stdio.h>
 int main() {
-  unsigned result = 0x25b7;
+  unsigned result = 0x1;
   printf("%u", result);
   return 0;
 }

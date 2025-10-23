@@ -50,7 +50,7 @@ static size_t gen_hex(char *buf, size_t buf_size, size_t offset) {
     int max = min + 1;
 
     u_int32_t num = random_int_range(range[min], range[max]);
-    sprintf(buf + offset, "0x%x", num);
+    sprintf(buf + offset, "(0x%x)", num);
     return strlen(buf + offset);
 }
 
