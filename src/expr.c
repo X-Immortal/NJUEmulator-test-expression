@@ -27,6 +27,11 @@ static size_t gen_decimal(char *buf, size_t buf_size, size_t offset) {
         0, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000, UINT_MAX
     };
 
+    if (buf_size - 1 == offset) {
+        printf("error\n");
+        exit(1);
+    }
+
     int max = random_int_range(1, ARRLEN(range));
     size_t empty_size = buf_size - offset - 1;
     max = max > empty_size ? empty_size : max;
@@ -167,7 +172,6 @@ static size_t gen(char *buf, size_t buf_size, size_t offset) {
             return len;
             break;
         default:
-            printf("error\n");
             return 0;
     }
 }
