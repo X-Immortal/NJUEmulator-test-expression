@@ -170,5 +170,6 @@ void gen_rand_expr(char *buf, size_t buf_size) {
     } while (lens[max] > buf_size);
 
     size_t size = random_int_range(lens[max - 1], lens[max] + 1);
+    printf("%u\n", size);
     gen(buf, size, 0);
 }
