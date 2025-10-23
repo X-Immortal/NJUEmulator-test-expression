@@ -28,8 +28,10 @@ static size_t gen_decimal(char *buf, size_t buf_size, size_t offset) {
     };
 
     int max = random_int_range(1, ARRLEN(range));
+    printf("max: %d\n", max);
     size_t empty_size = buf_size - offset - 1;
     max = max > empty_size ? empty_size : max;
+    printf("real max: %d\n", max);
     int min = max - 1;
 
     u_int32_t num = random_int_range(range[min], range[max]);
