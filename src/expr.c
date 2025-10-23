@@ -34,7 +34,7 @@ static size_t gen_decimal(char *buf, size_t buf_size, size_t offset) {
 
     u_int32_t num = random_int_range(range[min], range[max]);
     sprintf(buf + offset, "%d", num);
-    return max;
+    return min;
 }
 
 __attribute__((unused))
