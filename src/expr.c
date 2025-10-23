@@ -33,9 +33,9 @@ static size_t gen_decimal(char *buf, size_t buf_size, size_t offset) {
     int max = min + 1;
 
     u_int32_t num = random_int_range(range[min], range[max]);
-    printf("decimal: %u\n", num);
+    // printf("decimal: %u\n", num);
     sprintf(buf + offset, "%u", num);
-    return min;
+    return max;
 }
 
 __attribute__((unused))
@@ -140,22 +140,22 @@ static size_t gen(char *buf, size_t buf_size, size_t offset) {
     size_t len = 0;
     switch (random_int(4)) {
         case 0:
-            printf("choose: 0\n");
+            // printf("choose: 0\n");
             return gen_decimal(buf, buf_size, offset);
             break;
         case 1:
-            printf("choose: 1\n");
+            // printf("choose: 1\n");
             return gen_hex(buf, buf_size, offset);
             break;
         case 2:
-            printf("choose: 2\n");
+            // printf("choose: 2\n");
             len += gen_left_paran(buf, buf_size, offset + len);
             len += gen(buf, buf_size, offset + len);
             len += gen_right_paran(buf, buf_size, offset + len);
             return len;
             break;
         case 3:
-            printf("choose: 3\n");
+            // printf("choose: 3\n");
             len += gen(buf, buf_size, offset + len);
             len += gen_op(buf, buf_size, offset + len);
             len += gen(buf, buf_size, offset + len);
