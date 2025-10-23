@@ -139,18 +139,22 @@ static size_t gen(char *buf, size_t buf_size, size_t offset) {
     size_t len = 0;
     switch (random_int(4)) {
         case 0:
+            printf("choose: 0\n");
             return gen_decimal(buf, buf_size, offset);
             break;
         case 1:
+            printf("choose: 1\n");
             return gen_hex(buf, buf_size, offset);
             break;
         case 2:
+            printf("choose: 2\n");
             len += gen_left_paran(buf, buf_size, offset + len);
             len += gen(buf, buf_size, offset + len);
             len += gen_right_paran(buf, buf_size, offset + len);
             return len;
             break;
         case 3:
+            printf("choose: 3\n");
             len += gen(buf, buf_size, offset + len);
             len += gen_op(buf, buf_size, offset + len);
             len += gen(buf, buf_size, offset + len);
