@@ -136,7 +136,7 @@ static size_t gen(char *buf, size_t buf_size, size_t offset) {
         return 0;
     }
 
-    size_t len;
+    size_t len = 0;
     switch (random_int(4)) {
         case 0:
             return gen_decimal(buf, buf_size, offset);
@@ -145,14 +145,16 @@ static size_t gen(char *buf, size_t buf_size, size_t offset) {
             return gen_hex(buf, buf_size, offset);
             break;
         case 2:
-            offset += gen_left_paran(buf, buf_size, offset);
-            offset += gen(buf, buf_size, offset);
-            return gen_right_paran(buf, buf_size, offset);
+            len += gen_left_paran(buf, buf_size, offset + len);
+            len += gen(buf, buf_size, offset + len);
+            len += gen_right_paran(buf, buf_size, offset + len);
+            return len;
             break;
         case 3:
-            offset += gen(buf, buf_size, offset);
-            offset += gen_op(buf, buf_size, offset);
-            return gen(buf, buf_size, offset);
+            len += gen(buf, buf_size, offset + len);
+            len += gen_op(buf, buf_size, offset + len);
+            len += gen(buf, buf_size, offset + len);
+            return len;
             break;
         default:
             return 0;
