@@ -45,7 +45,12 @@ static size_t gen_hex(char *buf, size_t buf_size, size_t offset) {
     };
     
     int max = random_int_range(1, ARRLEN(range));
-    size_t empty_size = buf_size - offset - 1;
+    int empty_size = buf_size - offset - 1;
+    if (empty_size < 4) {
+        buf[offset] = '0';
+        buf[offset + 1] = '\0';
+        return 1;
+    }
     max = max + 4 > empty_size ? empty_size - 4 : max;
     int min = max - 1;
 
