@@ -164,7 +164,7 @@ void gen_rand_expr(char *buf, size_t buf_size) {
     static const size_t lens[] = {1, 10, 100, 1000, 10000};
     int max;
     do {
-        max = random_int_range(1, ARRLEN(lens));
+        max = random_int_range(2, ARRLEN(lens));
     } while (lens[max] > buf_size);
 
     size_t size = random_int_range(lens[max - 1], lens[max] + 1);
