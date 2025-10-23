@@ -13,7 +13,7 @@ static inline u_int32_t random_int_range(u_int32_t begin, u_int32_t end) {
         printf("Invalid range: from %u to %u\n", begin, end);
         return 0;
     }
-    return (rand() % (end - begin)) + begin;
+    return ((u_int32_t) rand() % (end - begin)) + begin;
 }
 
 __attribute__((unused))
@@ -157,6 +157,7 @@ static size_t gen(char *buf, size_t buf_size, size_t offset) {
             return len;
             break;
         default:
+            printf("error\n");
             return 0;
     }
 }
@@ -170,6 +171,5 @@ void gen_rand_expr(char *buf, size_t buf_size) {
     } while (lens[max] > buf_size);
 
     size_t size = random_int_range(lens[max - 1], lens[max] + 1);
-    printf("%lu\n", size);
     gen(buf, size, 0);
 }
