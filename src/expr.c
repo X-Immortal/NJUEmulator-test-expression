@@ -27,10 +27,10 @@ static size_t gen_decimal(char *buf, size_t buf_size, size_t offset) {
         0, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000, UINT_MAX
     };
 
-    // if (buf_size - 1 == offset) {
-    //     printf("error\n");
-    //     exit(1);
-    // }
+    if (buf_size - 1 == offset) {
+        printf("error\n");
+        exit(1);
+    }
 
     int max = random_int_range(1, ARRLEN(range));
     size_t empty_size = buf_size - offset - 1;
@@ -142,8 +142,9 @@ static size_t gen_space(char *buf, size_t buf_size, size_t offset) {
 }
 
 __attribute__((unused))
-static size_t gen(char *buf, size_t buf_size, size_t offset) {
+static size_t gen(char *buf, size_t buf_size, size_t offset, bool *success) {
     if (offset >= buf_size - 1) {
+        *success = false;
         return 0;
     }
 
@@ -160,15 +161,15 @@ static size_t gen(char *buf, size_t buf_size, size_t offset) {
         case 2:
             // printf("choose: 2\n");
             len += gen_left_paran(buf, buf_size, offset + len);
-            len += gen(buf, buf_size, offset + len);
+            len += gen(buf, buf_size, offset + len, success);
             len += gen_right_paran(buf, buf_size, offset + len);
             return len;
             break;
         case 3:
             // printf("choose: 3\n");
-            len += gen(buf, buf_size, offset + len);
+            len += gen(buf, buf_size, offset + len, success);
             len += gen_op(buf, buf_size, offset + len);
-            len += gen(buf, buf_size, offset + len);
+            len += gen(buf, buf_size, offset + len, success);
             return len;
             break;
         default:
@@ -181,9 +182,12 @@ void gen_rand_expr(char *buf, size_t buf_size) {
     static const size_t lens[] = {1, 10, 100, 1000, 10000};
     int max;
     do {
-        max = random_int_range(2, ARRLEN(lens));
+        max = random_int_range(1, ARRLEN(lens));
     } while (lens[max] > buf_size);
 
     size_t size = random_int_range(lens[max - 1], lens[max] + 1);
-    while (gen(buf, size, 0) == 0);
+    bool success = true;
+    do {
+        gen(buf, buf_size, 0, &success);
+    } while (!success);
 }
