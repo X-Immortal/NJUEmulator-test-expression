@@ -40,7 +40,7 @@ static size_t gen_decimal(char *buf, size_t buf_size, size_t offset) {
 __attribute__((unused))
 static size_t gen_hex(char *buf, size_t buf_size, size_t offset) {
     static const u_int32_t range[] = {
-        1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000
+        0, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000, UINT_MAX
     };
     
     int min = random_int(ARRLEN(range) - 1);
@@ -48,7 +48,7 @@ static size_t gen_hex(char *buf, size_t buf_size, size_t offset) {
     min = min > empty_size ? empty_size : min;
     int max = min + 1;
 
-    u_int32_t num = random_int_range(range[min], range[max] + 1);
+    u_int32_t num = random_int_range(range[min], range[max]);
     sprintf(buf + offset, "0x%x", num);
     return strlen(buf + offset);
 }
