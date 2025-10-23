@@ -21,28 +21,28 @@ static inline u_int32_t random_int(u_int32_t n) {
 }
 
 __attribute__((unused))
-static int gen_decimal(char *buf, size_t buf_size, size_t offset) {
+static size_t gen_decimal(char *buf, size_t buf_size, size_t offset) {
     static const u_int32_t range[] = {
-        1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000
+        0, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000
     };
     int max = random_int_range(1, ARRLEN(range));
     int min = max - 1;
     if (buf_size - offset - 1 < max) {
         return 0;
     }
-    u_int32_t num = random_int_range(range[min], range[max]);
+    u_int32_t num = random_int_range(range[min], range[max] + 1);
     sprintf(buf + offset, "%d", num);
     return max;
 }
 
 __attribute__((unused))
-static int gen_hex(char *buf, size_t buf_size, size_t offset) {
+static size_t gen_hex(char *buf, size_t buf_size, size_t offset) {
     static const u_int32_t range[] = {
         1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000
     };
     int max = random_int_range(1, ARRLEN(range));
     int min = max - 1;
-    u_int32_t num = random_int_range(range[min], range[max]);
+    u_int32_t num = random_int_range(range[min], range[max] + 1);
     char temp[ARRLEN(range) + 3];
     sprintf(temp, "0x%x", num);
     int len = strlen(temp);
@@ -54,18 +54,18 @@ static int gen_hex(char *buf, size_t buf_size, size_t offset) {
 }
 
 __attribute__((unused))
-static int gen_op(char *buf, size_t buf_size, size_t offset) {
-    static const char ops[] = {'+', '-', '*', '/'};
+static size_t gen_op(char *buf, size_t buf_size, size_t offset) {
+    static const char *ops[] = {"+", "-", "*", "/", "==", "!=", "&&"};
     if (buf_size - offset - 1 < 1) {
         return 0;
     }
-    buf[offset] = ops[random_int(ARRLEN(ops))];
-    buf[offset + 1] = '\0';
-    return 1;
+    int index = random_int(ARRLEN(ops));
+    strcpy(buf + offset, ops[index]);
+    return strlen(ops[index]);
 }
 
 __attribute__((unused))
-static int gen_reg(char *buf, size_t buf_size, size_t offset) {
+static size_t gen_reg(char *buf, size_t buf_size, size_t offset) {
     static const char *regs[] = {
         "$0", "ra", "sp", "gp", "tp", "t0", "t1", "t2",
         "s0", "s1", "a0", "a1", "a2", "a3", "a4", "a5",
@@ -82,33 +82,84 @@ static int gen_reg(char *buf, size_t buf_size, size_t offset) {
 }
 
 __attribute__((unused))
-static bool gen_addr(char *buf, size_t buf_size, size_t offset) {
-
-    return false;
+static size_t gen_addr(char *buf, size_t buf_size, size_t offset) {
+    static const u_int32_t min = 0x80000000;
+    static const u_int32_t max = 0x87ffffff;
+    static const int len = 10;
+    if (buf_size - offset - 1 < len) {
+        return 0;
+    }
+    sprintf(buf + offset, "0x%x", random_int_range(min, max + 1));
+    return len;
 }
 
 __attribute__((unused))
-static bool gen_left_paran(char *buf, size_t buf_size, size_t offset) {
-
-    return false;
+static size_t gen_left_paran(char *buf, size_t buf_size, size_t offset) {
+    if (buf_size - offset - 1 < 1) {
+        return 0;
+    }
+    buf[offset] = '(';
+    buf[offset + 1] = '\0';
+    return 1;
 }
 
 __attribute__((unused))
-static bool gen_right_paran(char *buf, size_t buf_size, size_t offset) {
-
-    return false;
+static int gen_right_paran(char *buf, size_t buf_size, size_t offset) {
+    if (buf_size - offset - 1 < 1) {
+        return 0;
+    }
+    buf[offset] = ')';
+    buf[offset + 1] = '\0';
+    return 1;
 }
 
 __attribute__((unused))
-static bool gen(char *buf, size_t buf_size, size_t offset) {
-    
-    return false;
+static size_t gen_space(char *buf, size_t buf_size, size_t offset) {
+    int size = buf_size - offset;
+    size = size > 10 ? 10 : size;
+    int len = random_int(size);
+    for (int i = 0; i < len; i++) {
+        buf[offset++] = ' ';
+    }
+    buf[offset] = '\0';
+    return len;
+}
+
+__attribute__((unused))
+static size_t gen(char *buf, size_t buf_size, size_t offset) {
+    if (offset >= buf_size) {
+        return 0;
+    }
+
+    size_t len;
+    switch (random_int(4)) {
+        case 0:
+            return gen_decimal(buf, buf_size, offset);
+            break;
+        case 1:
+            return gen_hex(buf, buf_size, offset);
+            break;
+        case 2:
+            offset += gen_left_paran(buf, buf_size, offset);
+            offset += gen(buf, buf_size, offset);
+            return gen_right_paran(buf, buf_size, offset);
+            break;
+        case 3:
+            offset += gen(buf, buf_size, offset);
+            offset += gen_op(buf, buf_size, offset);
+            return gen(buf, buf_size, offset);
+            break;
+    }
 }
 
 void gen_rand_expr(char *buf, size_t buf_size) {
     // 生成随机表达式的逻辑（原始代码未实现，可后续补充）
-    // int index = gen_decimal(buf, buf_size, 0);
-    // index += gen_op(buf, buf_size, index);
-    // gen_hex(buf, buf_size, index);
-    gen_reg(buf, buf_size, 0);
+    static const size_t lens[] = {1, 10, 100, 1000, 10000};
+    int max;
+    do {
+        max = random_int_range(1, ARRLEN(lens));
+    } while (lens[max] > buf_size);
+
+    size_t size = random_int_range(lens[max - 1], lens[max] + 1);
+    gen(buf, size, 0);
 }
