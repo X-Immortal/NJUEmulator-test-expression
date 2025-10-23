@@ -33,7 +33,7 @@ static size_t gen_decimal(char *buf, size_t buf_size, size_t offset) {
     int min = max - 1;
 
     u_int32_t num = random_int_range(range[min], range[max]);
-    // printf("decimal: %u\n", num);
+    printf("decimal: %u\n", num);
     sprintf(buf + offset, "%u", num);
     return max;
 }
