@@ -27,10 +27,10 @@ static size_t gen_decimal(char *buf, size_t buf_size, size_t offset) {
         0, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000, UINT_MAX
     };
 
-    if (buf_size - 1 == offset) {
-        printf("error\n");
-        exit(1);
-    }
+    // if (buf_size - 1 == offset) {
+    //     printf("error\n");
+    //     exit(1);
+    // }
 
     int max = random_int_range(1, ARRLEN(range));
     size_t empty_size = buf_size - offset - 1;
@@ -144,7 +144,7 @@ static size_t gen_space(char *buf, size_t buf_size, size_t offset) {
 __attribute__((unused))
 static size_t gen(char *buf, size_t buf_size, size_t offset) {
     if (offset >= buf_size - 1) {
-        gen(buf, buf_size, 0);
+        return 0;
     }
 
     size_t len = 0;
@@ -185,5 +185,5 @@ void gen_rand_expr(char *buf, size_t buf_size) {
     } while (lens[max] > buf_size);
 
     size_t size = random_int_range(lens[max - 1], lens[max] + 1);
-    gen(buf, size, 0);
+    while (gen(buf, size, 0) == 0);
 }
