@@ -27,10 +27,10 @@ static size_t gen_decimal(char *buf, size_t buf_size, size_t offset) {
         0, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000, UINT_MAX
     };
 
-    int min = random_int(ARRLEN(range) - 1);
+    int max = random_int(ARRLEN(range));
     size_t empty_size = buf_size - offset - 1;
-    min = min > empty_size ? empty_size : min;
-    int max = min + 1;
+    max = max > empty_size ? empty_size : max;
+    int min = max - 1;
 
     u_int32_t num = random_int_range(range[min], range[max]);
     // printf("decimal: %u\n", num);
@@ -41,13 +41,13 @@ static size_t gen_decimal(char *buf, size_t buf_size, size_t offset) {
 __attribute__((unused))
 static size_t gen_hex(char *buf, size_t buf_size, size_t offset) {
     static const u_int32_t range[] = {
-        0, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000, UINT_MAX
+        0x0, 0x10, 0x100, 0x1000, 0x10000, 0x100000, 0x1000000, 0x10000000, 0xffffffff
     };
     
-    int min = random_int(ARRLEN(range) - 1);
+    int max = random_int(ARRLEN(range));
     size_t empty_size = buf_size - offset - 1;
-    min = min > empty_size ? empty_size : min;
-    int max = min + 1;
+    max = max + 4 > empty_size ? empty_size - 4 : max;
+    int min = max - 1;
 
     u_int32_t num = random_int_range(range[min], range[max]);
     sprintf(buf + offset, "(0x%x)", num);
