@@ -38,7 +38,7 @@ static size_t gen_decimal(char *buf, size_t buf_size, size_t offset) {
     int min = max - 1;
 
     u_int32_t num = random_int_range(range[min], range[max]);
-    printf("decimal: %u\n", num);
+    // printf("decimal: %u\n", num);
     sprintf(buf + offset, "%u", num);
     return max;
 }
@@ -156,7 +156,7 @@ static size_t gen(char *buf, size_t buf_size, size_t offset, bool *success) {
     size_t len = 0;
     switch (random_int(4)) {
         case 0:
-            printf("choose: 0\n");
+            // printf("choose: 0\n");
             if (depth < 2) {
                 return gen(buf, buf_size, offset, success);
             }
@@ -164,10 +164,9 @@ static size_t gen(char *buf, size_t buf_size, size_t offset, bool *success) {
             len += gen_space(buf, buf_size, offset + len);
             len += gen_decimal(buf, buf_size, offset + len); 
             len += gen_space(buf, buf_size, offset + len);
-            return len;
             break;
         case 1:
-            printf("choose: 1\n");
+            // printf("choose: 1\n");
             if (depth < 2) {
                 return gen(buf, buf_size, offset, success);
             }
@@ -177,7 +176,7 @@ static size_t gen(char *buf, size_t buf_size, size_t offset, bool *success) {
             len += gen_space(buf, buf_size, offset + len);
             break;
         case 2:
-            printf("choose: 2\n");
+            // printf("choose: 2\n");
             len += gen_space(buf, buf_size, offset + len);
             len += gen_left_paran(buf, buf_size, offset + len);
             len += gen_space(buf, buf_size, offset + len);
@@ -187,10 +186,9 @@ static size_t gen(char *buf, size_t buf_size, size_t offset, bool *success) {
             len += gen_right_paran(buf, buf_size, offset + len);
             len += gen_space(buf, buf_size, offset + len);
             depth -= depth == 0 ? 0 : 1;
-            return len;
             break;
         case 3:
-            printf("choose: 3\n");
+            // printf("choose: 3\n");
             depth++;
             len += gen_space(buf, buf_size, offset + len);
             len += gen(buf, buf_size, offset + len, success);
@@ -201,12 +199,11 @@ static size_t gen(char *buf, size_t buf_size, size_t offset, bool *success) {
             len += gen(buf, buf_size, offset + len, success);
             len += gen_space(buf, buf_size, offset + len);
             depth -= depth == 0 ? 0 : 1;
-            return len;
             break;
         default:
             return 0;
     }
-    return 0;
+    return len;
 }
 
 void gen_rand_expr(char *buf, size_t buf_size) {

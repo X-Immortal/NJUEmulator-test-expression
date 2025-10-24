@@ -1,6 +1,6 @@
 #include <stdio.h>
 int main() {
-  unsigned result =   (1958033841    ) &&  + ()   ;
+  unsigned result =     (  +435717190   )/    *    (  )   ;
   printf("%u", result);
   return 0;
 }
