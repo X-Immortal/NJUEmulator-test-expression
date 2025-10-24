@@ -201,10 +201,8 @@ static void gen_div(char *buf, size_t buf_size, size_t *offset, char *calc_buf, 
     *calc_offset += 7;
 
     *success = true;
-    size_t begin = *offset;
     gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
     if (!*success) return;
-    *calc_offset += *offset - begin;
 
     gen_space(buf, buf_size, offset);
     if (buf_size - *offset - 1 < 2) {
@@ -215,10 +213,8 @@ static void gen_div(char *buf, size_t buf_size, size_t *offset, char *calc_buf, 
     sprintf(calc_buf + (*calc_offset)++, ",");
     gen_space(buf, buf_size, offset);
     
-    begin = *offset;
     gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
     if (!*success) return;
-    *calc_offset += *offset - begin;
 
     sprintf(calc_buf + (*calc_offset)++, ")");
 }
