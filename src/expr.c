@@ -207,7 +207,7 @@ static void gen_space(char *buf, size_t buf_size, size_t *offset) {
 }
 
 __attribute__((unused))
-static void gen_div(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success) {
+static void gen_div(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success, bool non_zero) {
     if (buf_size - *offset - 1 < 5) {
         *success = false;
         return;
@@ -232,11 +232,24 @@ static void gen_div(char *buf, size_t buf_size, size_t *offset, char *calc_buf, 
     sprintf(calc_buf + (*calc_offset)++, ",");
     gen_space(buf, buf_size, offset);
     
-    gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, 1);
+    if (non_zero) {
+        gen_decimal(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+    } else {
+        gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, 1);
+    }
     if (!*success) return;
 
     gen_right_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
     if (!*success) return;
+}
+
+static void gen_max(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success) {
+    if (buf_size - *offset - 1 < 10) {
+        *success = false;
+        return;
+    }
+    sprintf(buf + *offset, "%u", UINT_MAX);
+    sprintf(calc_buf + *calc_offset, "%u", UINT_MAX);
 }
 
 __attribute__((unused))
@@ -251,7 +264,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
     depth++;
     size_t len = 0;
     gen_space(buf, buf_size, offset);
-    u_int32_t choose = random_int(7);
+    u_int32_t choose = random_int(10);
     
     if (buf_size - *offset - 1 < 20) choose = 0;
 #if DEBUG == 1
@@ -266,7 +279,6 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
                 return;
             }
             gen_decimal(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success); 
-            CHECK();
             break;
         case 1:
             if (depth < min_depth) {
@@ -275,7 +287,6 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
                 return;
             }
             gen_hex(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
-            CHECK();
             break;
         case 2:
             gen_left_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
@@ -285,9 +296,9 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             CHECK();
             gen_space(buf, buf_size, offset);
             gen_right_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
-            CHECK();
             break;
         case 3:
+        case 4:
             gen_left_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             CHECK();
             gen_space(buf, buf_size, offset);
@@ -301,24 +312,26 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             CHECK();
             gen_space(buf, buf_size, offset);
             gen_right_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
-            CHECK();
             break;
-        case 4:
+        case 5:
             if (depth < min_depth) {
                 gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, min_depth);
                 depth--;
                 return;
             }
             gen_reg(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
-            CHECK();
-            break;
-        case 5:
-            gen_addr(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
-            CHECK();
             break;
         case 6:
-            gen_div(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
-            CHECK();
+            gen_addr(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            break;
+        case 7:
+            gen_div(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, false);
+            break;
+        case 8:
+            gen_div(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, true);
+            break;
+        case 9:
+            gen_max(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             break;
         default:
             break;
