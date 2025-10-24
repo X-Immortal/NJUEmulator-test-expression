@@ -60,7 +60,7 @@ static void gen_hex(char *buf, size_t buf_size, size_t *offset, char *calc_buf, 
     if (empty_size < 4) {
         buf[*offset] = '0';
         buf[*offset + 1] = '\0';
-        return 1;
+        return;
     }
     max = max + 4 > empty_size ? empty_size - 4 : max;
     int min = max - 1;
@@ -86,7 +86,7 @@ static void gen_op(char *buf, size_t buf_size, size_t *offset) {
     } else if (empty_space == 1) {
         index = random_int(4);
     } else {
-        return 0;
+        return;
     }
     strcpy(buf + *offset, ops[index]);
     *offset += strlen(ops[index]);
@@ -180,7 +180,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
 
     if (*offset >= buf_size - 1) {
         *success = false;
-        return 0;
+        return;
     }
 
     size_t len = 0;
