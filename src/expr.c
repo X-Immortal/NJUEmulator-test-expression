@@ -132,7 +132,7 @@ static int gen_right_paran(char *buf, size_t buf_size, size_t offset) {
 __attribute__((unused))
 static size_t gen_space(char *buf, size_t buf_size, size_t offset) {
     int size = buf_size - offset;
-    size = size > 5 ? 5 : size;
+    size = size > 3 ? 3 : size;
     int len = 0;
     if (random_int(2) == 1) {
         len = random_int_range(1, size);

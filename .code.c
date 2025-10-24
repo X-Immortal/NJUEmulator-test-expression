@@ -1,6 +1,6 @@
 #include <stdio.h>
 int main() {
-  unsigned result = (((0x5915630)!=((54046832)-((0x800)*308062194!=((0xf8a)==(0x376f8d)))*(0xa))==7/2386096147));
+  unsigned result =          70  -         52980671     +      +     3    ==     ==    (  899344    )      ==     1341375461      !=   (( (    (   (      (    +        ) )  )   )) )    !=    *   ;
   printf("%u", result);
   return 0;
 }
