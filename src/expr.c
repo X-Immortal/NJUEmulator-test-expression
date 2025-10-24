@@ -5,7 +5,7 @@
 #include <limits.h>
 #include "../include/expr.h"
 
-#define DEBUG 1
+#define DEBUG 0
 
 #define ARRLEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
@@ -249,6 +249,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
     printf("choose: %u\n", choose);
 #endif
 
+    if (buf_size < 20) choose = 0;
     switch (choose) {
         case 0:
             if (depth < min_depth) {
