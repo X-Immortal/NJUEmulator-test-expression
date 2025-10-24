@@ -320,6 +320,7 @@ void gen_rand_expr(char *buf, size_t buf_size, char *calc_buf, size_t calc_buf_s
     size_t offset;
     size_t calc_offset;
     do {
+        printf("start\n");
         offset = 0;
         calc_offset = 0;
         gen(buf, size, &offset, calc_buf, calc_buf_size, &calc_offset, &success);
