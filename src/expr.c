@@ -12,6 +12,7 @@ static void gen_space(char *buf, size_t buf_size, size_t *offset);
 
 __attribute__((unused))
 static inline u_int32_t random_int_range(u_int32_t begin, u_int32_t end) {
+    if (begin == end) return begin;
     if (end < begin) {
         printf("Invalid range: from %u to %u\n", begin, end);
         return 0;
@@ -184,7 +185,9 @@ static void gen_right_paran(char *buf, size_t buf_size, size_t *offset, char *ca
 
 __attribute__((unused))
 static void gen_space(char *buf, size_t buf_size, size_t *offset) {
-    int size = buf_size - *offset;
+    int size = buf_size - *offset - 1;
+    if (size <= 0) return;
+
     size = size > 5 ? 5 : size;
     int len = 0;
     if (random_int(2) == 1) {
