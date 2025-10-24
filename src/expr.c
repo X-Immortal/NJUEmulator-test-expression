@@ -169,7 +169,7 @@ static void gen_space(char *buf, size_t buf_size, size_t *offset) {
     if (random_int(2) == 1) {
         len = random_int_range(1, size);
     }
-    printf("gen space: %d\n", size);
+    printf("gen space: %d\n", len);
     for (int i = 0; i < len; i++) {
         buf[*offset++] = ' ';
     }
