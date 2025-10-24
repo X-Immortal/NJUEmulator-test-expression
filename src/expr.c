@@ -299,7 +299,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
         default:
             break;
     }
-    printf("%u\n", choose);
+    printf("choose: %u\n", choose);
     puts(buf);
     printf("offset: %lu\n", *offset);
     gen_space(buf, buf_size, offset);
