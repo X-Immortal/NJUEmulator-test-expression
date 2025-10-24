@@ -117,7 +117,7 @@ static void gen_reg(char *buf, size_t buf_size, size_t *offset, char *calc_buf, 
 
     sprintf(buf + *offset, "$%s", regs[index]);
     *offset += len;
-    sprintf(calc_buf + *calc_offset, "0");
+    sprintf(calc_buf + *calc_offset, "(uint32_t)0");
     *calc_offset += 1;
 }
 
@@ -249,7 +249,9 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
                 return;
             }
             gen_reg(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
-            if (!*success) return;
+            break;
+        case 5:
+            gen_addr(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             break;
         default:
             break;
