@@ -235,16 +235,20 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
         return;
     }
 
+    depth++;
     size_t len = 0;
     gen_space(buf, buf_size, offset);
     u_int32_t choose = random_int(7);
+    if (buf_size < 10) {
+        choose = 0;
+        depth = 2;
+    }
     switch (choose) {
         case 0:
             if (depth < 2) {
                 gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
                 return;
             }
-            depth -= depth == 0 ? 0 : 1;
             gen_decimal(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success); 
             if (!*success) return;
             break;
@@ -253,7 +257,6 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
                 gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
                 return;
             }
-            depth -= depth == 0 ? 0 : 1;
             gen_hex(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             if (!*success) return;
             break;
@@ -261,26 +264,21 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             gen_left_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             if (!*success) return;
             gen_space(buf, buf_size, offset);
-            depth++;
             gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             if (!*success) return;
             gen_space(buf, buf_size, offset);
             gen_right_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             if (!*success) return;
-            depth -= depth == 0 ? 0 : 1;
             break;
         case 3:
-            depth++;
             gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             if (!*success) return;
             gen_space(buf, buf_size, offset);
             gen_op(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             if (!*success) return;
             gen_space(buf, buf_size, offset);
-            depth++;
             gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             if (!*success) return;
-            depth -= depth == 0 ? 0 : 1;
             break;
         case 4:
             if (depth < 2) {
@@ -305,6 +303,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
     puts(buf);
     printf("offset: %lu\n", *offset);
     gen_space(buf, buf_size, offset);
+    depth -= depth == 0 ? 0 : 1;
 }
 
 void gen_rand_expr(char *buf, size_t buf_size, char *calc_buf, size_t calc_buf_size) {
