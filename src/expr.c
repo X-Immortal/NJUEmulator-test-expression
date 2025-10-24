@@ -5,7 +5,7 @@
 #include <limits.h>
 #include "../include/expr.h"
 
-#define DEBUG 1
+#define DEBUG 0
 
 #define ARRLEN(arr) (sizeof(arr) / sizeof(arr[0]))
 #define CHECK() do{if (!*success) {depth--;return;}}while(0)
