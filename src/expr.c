@@ -191,7 +191,8 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
         case 0:
             printf("choose: 0\n");
             if (depth < 2) {
-                return gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+                gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+                return;
             }
             depth -= depth == 0 ? 0 : 1;
             gen_space(buf, buf_size, offset);
@@ -201,7 +202,8 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
         case 1:
             printf("choose: 1\n");
             if (depth < 2) {
-                return gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+                gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+                return;
             }
             depth -= depth == 0 ? 0 : 1;
             gen_space(buf, buf_size, offset);
