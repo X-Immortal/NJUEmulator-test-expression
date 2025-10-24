@@ -300,7 +300,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
     gen_space(buf, buf_size, offset);
     u_int32_t choose = random_int(10);
     
-    if (buf_size - *offset - 1 < 20) sleep(1);
+    if (buf_size - *offset - 1 < 5) sleep(1);
     
 #if DEBUG == 1
     printf("choose: %u\n", choose);
