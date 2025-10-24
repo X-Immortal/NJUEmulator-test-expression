@@ -132,8 +132,11 @@ static int gen_right_paran(char *buf, size_t buf_size, size_t offset) {
 __attribute__((unused))
 static size_t gen_space(char *buf, size_t buf_size, size_t offset) {
     int size = buf_size - offset;
-    size = size > 10 ? 10 : size;
-    int len = random_int(size);
+    size = size > 5 ? 5 : size;
+    int len = 0;
+    if (random_int(2) == 1) {
+        len = random_int_range(1, size);
+    }
     for (int i = 0; i < len; i++) {
         buf[offset++] = ' ';
     }
@@ -158,7 +161,10 @@ static size_t gen(char *buf, size_t buf_size, size_t offset, bool *success) {
                 return gen(buf, buf_size, offset, success);
             }
             depth -= depth == 0 ? 0 : 1;
-            return gen_decimal(buf, buf_size, offset);
+            len += gen_space(buf, buf_size, offset + len);
+            len += gen_decimal(buf, buf_size, offset + len); 
+            len += gen_space(buf, buf_size, offset + len);
+            return len;
             break;
         case 1:
             // printf("choose: 1\n");
@@ -166,24 +172,34 @@ static size_t gen(char *buf, size_t buf_size, size_t offset, bool *success) {
                 return gen(buf, buf_size, offset, success);
             }
             depth -= depth == 0 ? 0 : 1;
-            return gen_hex(buf, buf_size, offset);
+            len += gen_space(buf, buf_size, offset + len);
+            len += gen_hex(buf, buf_size, offset + len);
+            len += gen_space(buf, buf_size, offset + len);
             break;
         case 2:
             // printf("choose: 2\n");
+            len += gen_space(buf, buf_size, offset + len);
             len += gen_left_paran(buf, buf_size, offset + len);
+            len += gen_space(buf, buf_size, offset + len);
             depth++;
             len += gen(buf, buf_size, offset + len, success);
+            len += gen_space(buf, buf_size, offset + len);
             len += gen_right_paran(buf, buf_size, offset + len);
+            len += gen_space(buf, buf_size, offset + len);
             depth -= depth == 0 ? 0 : 1;
             return len;
             break;
         case 3:
             // printf("choose: 3\n");
             depth++;
+            len += gen_space(buf, buf_size, offset + len);
             len += gen(buf, buf_size, offset + len, success);
+            len += gen_space(buf, buf_size, offset + len);
             len += gen_op(buf, buf_size, offset + len);
+            len += gen_space(buf, buf_size, offset + len);
             depth++;
             len += gen(buf, buf_size, offset + len, success);
+            len += gen_space(buf, buf_size, offset + len);
             depth -= depth == 0 ? 0 : 1;
             return len;
             break;
