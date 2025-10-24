@@ -9,7 +9,7 @@
 
 #define ARRLEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
-static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success);
+static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success, size_t min_depth);
 static void gen_space(char *buf, size_t buf_size, size_t *offset);
 
 __attribute__((unused))
@@ -155,7 +155,7 @@ static void gen_addr(char *buf, size_t buf_size, size_t *offset, char *calc_buf,
     do {
         *offset = temp_offset;
         *calc_offset = temp_calc_offset;
-        gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+        gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, 1);
     } while (!*success);
     if (buf_size - *offset - 1 < 1) {
         *success = false;
@@ -213,7 +213,7 @@ static void gen_div(char *buf, size_t buf_size, size_t *offset, char *calc_buf, 
     *calc_offset += 7;
 
     *success = true;
-    gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+    gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, 1);
     if (!*success) return;
 
     gen_space(buf, buf_size, offset);
@@ -225,14 +225,14 @@ static void gen_div(char *buf, size_t buf_size, size_t *offset, char *calc_buf, 
     sprintf(calc_buf + (*calc_offset)++, ",");
     gen_space(buf, buf_size, offset);
     
-    gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+    gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, 1);
     if (!*success) return;
 
     sprintf(calc_buf + (*calc_offset)++, ")");
 }
 
 __attribute__((unused))
-static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success) {
+static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success, size_t min_depth) {
     static int depth = 0;
 
     if (*offset >= buf_size - 1) {
@@ -244,25 +244,23 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
     size_t len = 0;
     gen_space(buf, buf_size, offset);
     u_int32_t choose = random_int(7);
-    // if (buf_size < 10) {
-    //     choose = 0;
-    //     depth = 2;
-    // }
+    
 #if DEBUG == 1
     printf("choose: %u\n", choose);
 #endif
+
     switch (choose) {
         case 0:
-            if (depth < 2) {
-                gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            if (depth < min_depth) {
+                gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, min_depth);
                 return;
             }
             gen_decimal(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success); 
             if (!*success) return;
             break;
         case 1:
-            if (depth < 2) {
-                gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            if (depth < min_depth) {
+                gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, min_depth);
                 return;
             }
             gen_hex(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
@@ -272,25 +270,25 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             gen_left_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             if (!*success) return;
             gen_space(buf, buf_size, offset);
-            gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, min_depth);
             if (!*success) return;
             gen_space(buf, buf_size, offset);
             gen_right_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             if (!*success) return;
             break;
         case 3:
-            gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, min_depth);
             if (!*success) return;
             gen_space(buf, buf_size, offset);
             gen_op(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             if (!*success) return;
             gen_space(buf, buf_size, offset);
-            gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, min_depth);
             if (!*success) return;
             break;
         case 4:
-            if (depth < 2) {
-                gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            if (depth < min_depth) {
+                gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, min_depth);
                 return;
             }
             gen_reg(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
@@ -330,12 +328,16 @@ void gen_rand_expr(char *buf, size_t buf_size, char *calc_buf, size_t calc_buf_s
     bool success = true;
     size_t offset;
     size_t calc_offset;
+
+    size_t min_depth = 0;
+    for (size_t temp_size = size; temp_size > 0; temp_size /= 10, min_depth++);
+
     do {
 #if DEBUG == 1
         printf("start\n");
 #endif
         offset = 0;
         calc_offset = 0;
-        gen(buf, size, &offset, calc_buf, calc_buf_size, &calc_offset, &success);
+        gen(buf, size, &offset, calc_buf, calc_buf_size, &calc_offset, &success, min_depth);
     } while (!success);
 }
