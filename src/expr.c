@@ -188,7 +188,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
     }
 
     size_t len = 0;
-    switch (random_int(5)) {
+    switch (random_int(6)) {
         case 0:
             // printf("choose: 0\n");
             if (depth < 2) {
