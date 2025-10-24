@@ -187,7 +187,7 @@ static void gen_right_paran(char *buf, size_t buf_size, size_t *offset, char *ca
 
 __attribute__((unused))
 static void gen_space(char *buf, size_t buf_size, size_t *offset) {
-    int size = buf_size - *offset - 1;
+    int size = buf_size - *offset - 2;
     if (size <= 0) return;
 
     size = size > 5 ? 5 : size;
@@ -195,7 +195,9 @@ static void gen_space(char *buf, size_t buf_size, size_t *offset) {
     if (random_int(2) == 1) {
         len = random_int_range(1, size);
     }
-    // printf("gen space: %d\n", len);
+#if DEBUG == 1
+    printf("gen space: %d\n", len);
+#endif
     for (int i = 0; i < len; i++) {
         buf[(*offset)++] = ' ';
     }
