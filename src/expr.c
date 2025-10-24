@@ -198,6 +198,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             gen_space(buf, buf_size, offset);
             gen_decimal(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset); 
             gen_space(buf, buf_size, offset);
+            puts(buf);
             break;
         case 1:
             printf("choose: 1\n");
@@ -209,6 +210,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             gen_space(buf, buf_size, offset);
             gen_hex(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset);
             gen_space(buf, buf_size, offset);
+            puts(buf);
             break;
         case 2:
             printf("choose: 2\n");
@@ -224,6 +226,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             if (!*success) return;
             gen_space(buf, buf_size, offset);
             depth -= depth == 0 ? 0 : 1;
+            puts(buf);
             break;
         case 3:
             printf("choose: 3\n");
@@ -237,6 +240,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             gen_space(buf, buf_size, offset);
             depth -= depth == 0 ? 0 : 1;
+            puts(buf);
             break;
         default:
             break;
