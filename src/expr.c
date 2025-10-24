@@ -157,6 +157,7 @@ static size_t gen(char *buf, size_t buf_size, size_t offset, bool *success) {
             if (depth < 2) {
                 return gen(buf, buf_size, offset, success);
             }
+            depth -= depth == 0 ? 0 : 1;
             return gen_decimal(buf, buf_size, offset);
             break;
         case 1:
@@ -164,20 +165,26 @@ static size_t gen(char *buf, size_t buf_size, size_t offset, bool *success) {
             if (depth < 2) {
                 return gen(buf, buf_size, offset, success);
             }
+            depth -= depth == 0 ? 0 : 1;
             return gen_hex(buf, buf_size, offset);
             break;
         case 2:
             // printf("choose: 2\n");
             len += gen_left_paran(buf, buf_size, offset + len);
+            depth++;
             len += gen(buf, buf_size, offset + len, success);
             len += gen_right_paran(buf, buf_size, offset + len);
+            depth -= depth == 0 ? 0 : 1;
             return len;
             break;
         case 3:
             // printf("choose: 3\n");
+            depth++;
             len += gen(buf, buf_size, offset + len, success);
             len += gen_op(buf, buf_size, offset + len);
+            depth++;
             len += gen(buf, buf_size, offset + len, success);
+            depth -= depth == 0 ? 0 : 1;
             return len;
             break;
         default:
