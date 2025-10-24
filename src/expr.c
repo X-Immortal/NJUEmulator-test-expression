@@ -5,7 +5,7 @@
 #include <limits.h>
 #include "../include/expr.h"
 
-#define DEBUG 1
+#define DEBUG 0
 
 #define ARRLEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
@@ -187,7 +187,7 @@ static void gen_right_paran(char *buf, size_t buf_size, size_t *offset, char *ca
 
 __attribute__((unused))
 static void gen_space(char *buf, size_t buf_size, size_t *offset) {
-    int size = buf_size - *offset - 1;
+    int size = buf_size - *offset - 2;
     if (size <= 0) return;
 
     size = size > 5 ? 5 : size;
@@ -196,7 +196,7 @@ static void gen_space(char *buf, size_t buf_size, size_t *offset) {
         len = random_int_range(1, size);
     }
 #if DEBUG == 1
-    printf("size: %lu\n", buf_size);
+    // printf("size: %lu\n", buf_size);
     printf("gen space: %d\n", len);
 #endif
     for (int i = 0; i < len; i++) {
