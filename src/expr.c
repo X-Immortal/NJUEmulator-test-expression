@@ -244,6 +244,10 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             // puts(buf);
             break;
         case 4:
+            if (depth < 2) {
+                gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+                return;
+            }
             gen_reg(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             if (!*success) return;
             break;
