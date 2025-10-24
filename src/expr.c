@@ -140,8 +140,9 @@ static void gen_addr(char *buf, size_t buf_size, size_t *offset, char *calc_buf,
         return;
     }
 
-    sprintf(buf + *offset, "*(");
-    *offset += strlen(buf + *offset);
+    sprintf(buf + (*offset)++, "*");
+    gen_space(buf, buf_size, offset);
+    sprintf(buf +(*offset)++, "(");
     sprintf(calc_buf + *calc_offset, "vaddr_read(");
     *calc_offset += strlen(calc_buf + *calc_offset);
 
@@ -188,6 +189,40 @@ static void gen_space(char *buf, size_t buf_size, size_t *offset) {
     buf[*offset] = '\0';
 }
 
+static void gen_div(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success) {
+    if (buf_size - *offset - 1 < 3) {
+        *success = false;
+        return;
+    }
+
+    sprintf(calc_buf + *calc_offset, "divide(");
+    *calc_offset += 7;
+
+    *success = true;
+    size_t begin = *offset;
+    gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+    if (!*success) return;
+    strcpy(calc_buf + *calc_buf, buf + begin);
+    *calc_offset += *offset - begin;
+
+    gen_space(buf, buf_size, offset);
+    if (buf_size - *offset - 1 < 2) {
+        *success = false;
+        return;
+    }
+    sprintf(buf + (*offset)++, "/");
+    sprintf(calc_buf + (*calc_offset)++, ",");
+    gen_space(buf, buf_size, offset);
+    
+    begin = *offset;
+    gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+    if (!*success) return;
+    strcpy(calc_buf + *calc_offset, buf + *offset);
+    *calc_offset += *offset - begin;
+
+    sprintf(calc_buf + (*calc_offset)++, ")");
+}
+
 __attribute__((unused))
 static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success) {
     static int depth = 0;
@@ -198,7 +233,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
     }
 
     size_t len = 0;
-    switch (random_int(6)) {
+    switch (random_int(7)) {
         case 0:
             // printf("choose: 0\n");
             if (depth < 2) {
@@ -258,11 +293,20 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
                 gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
                 return;
             }
+            gen_space(buf, buf_size, offset);
             gen_reg(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            gen_space(buf, buf_size, offset);
             break;
         case 5:
             // printf("choose: 5\n");
+            gen_space(buf, buf_size, offset);
             gen_addr(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            gen_space(buf, buf_size, offset);
+            break;
+        case 6:
+            gen_space(buf, buf_size, offset);
+            gen_div(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            gen_space(buf, buf_size, offset);
             break;
         default:
             break;
