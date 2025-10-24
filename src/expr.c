@@ -249,7 +249,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             gen_reg(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             break;
         case 5:
-            printf("choose: 5\n");
+            // printf("choose: 5\n");
             gen_addr(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             break;
         default:
