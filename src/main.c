@@ -8,8 +8,24 @@
 
 static char buf[65536] = {};
 static char code_buf[65536 + 128] = {};
+static char calc_buf[65536] = {};
 static char *code_format =
 "#include <stdio.h>\n"
+"#include <stdint.h>\n"
+"uint32_t vaddr_read(uint32_t addr) {\n"
+"  if (addr >= 0x80000000 && addr <= 0x87ffffff) {\n"
+"    return 0;\n"
+"  }\n"
+"  printf(\"invalid\\n\");\n"
+"  exit(0);\n"
+"}\n"
+"uint32_t divide(uint32_t a, uint32_t b) {\n"
+"  if (b == 0) {\n"
+"    printf(\"invalid\\n\");\n"
+"    exit(0);\n"
+"  }\n"
+"  return a / b;\n"
+"}\n"
 "int main() {\n"
 "  unsigned result = %s;\n"
 "  printf(\"%%u\", result);\n"
@@ -25,9 +41,9 @@ int main(int argc, char *argv[]) {
   }
   int i;
   for (i = 0; i < loop; i ++) {
-    gen_rand_expr(buf, sizeof(buf));
+    gen_rand_expr(buf, sizeof(buf), calc_buf, sizeof(calc_buf));
 
-    sprintf(code_buf, code_format, buf);
+    sprintf(code_buf, code_format, calc_buf);
 
     FILE *fp = fopen("./.code.c", "w");
     assert(fp != NULL);

@@ -22,7 +22,7 @@ static inline u_int32_t random_int(u_int32_t n) {
 }
 
 __attribute__((unused))
-static size_t gen_decimal(char *buf, size_t buf_size, size_t offset) {
+static void gen_decimal(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset) {
     static const u_int32_t range[] = {
         0, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000, UINT_MAX
     };
@@ -33,42 +33,54 @@ static size_t gen_decimal(char *buf, size_t buf_size, size_t offset) {
     }
 
     int max = random_int_range(1, ARRLEN(range));
-    size_t empty_size = buf_size - offset - 1;
+    size_t empty_size = buf_size - *offset - 1;
     max = max > empty_size ? empty_size : max;
     int min = max - 1;
 
     u_int32_t num = random_int_range(range[min], range[max]);
     // printf("decimal: %u\n", num);
-    sprintf(buf + offset, "%u", num);
-    return max;
+    sprintf(buf + *offset, "%u", num);
+    *offset += max;
+    if (calc_buf_size - *calc_offset - 1 < max + 10) {
+        printf("calc full\n");
+        exit(1);
+    }
+    sprintf(calc_buf + *calc_offset, "(uint32_t)%u", num);
+    *calc_offset += max + 10;
 }
 
 __attribute__((unused))
-static size_t gen_hex(char *buf, size_t buf_size, size_t offset) {
+static void gen_hex(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset) {
     static const u_int32_t range[] = {
         0x0, 0x10, 0x100, 0x1000, 0x10000, 0x100000, 0x1000000, 0x10000000, 0xffffffff
     };
     
     int max = random_int_range(1, ARRLEN(range));
-    int empty_size = buf_size - offset - 1;
+    int empty_size = buf_size - *offset - 1;
     if (empty_size < 4) {
-        buf[offset] = '0';
-        buf[offset + 1] = '\0';
+        buf[*offset] = '0';
+        buf[*offset + 1] = '\0';
         return 1;
     }
     max = max + 4 > empty_size ? empty_size - 4 : max;
     int min = max - 1;
 
     u_int32_t num = random_int_range(range[min], range[max]);
-    sprintf(buf + offset, "(0x%x)", num);
-    return strlen(buf + offset);
+    sprintf(buf + *offset, "(0x%x)", num);
+    if (calc_buf_size - *calc_offset - 1 < max + 14) {
+        printf("calc full\n");
+        exit(1);
+    }
+    sprintf(calc_buf + *calc_offset, "(uint32_t)(0x%x)", num);
+    *offset += max + 4;
+    *calc_offset += max + 14;
 }
 
 __attribute__((unused))
-static size_t gen_op(char *buf, size_t buf_size, size_t offset) {
+static void gen_op(char *buf, size_t buf_size, size_t *offset) {
     static const char *ops[] = {"+", "-", "*", "/", "==", "!=", "&&"};
     int index; 
-    size_t empty_space = buf_size - offset - 1;
+    size_t empty_space = buf_size - *offset - 1;
     if (empty_space >= 2) {
         index = random_int(ARRLEN(ops));
     } else if (empty_space == 1) {
@@ -76,76 +88,94 @@ static size_t gen_op(char *buf, size_t buf_size, size_t offset) {
     } else {
         return 0;
     }
-    strcpy(buf + offset, ops[index]);
-    return strlen(ops[index]);
+    strcpy(buf + *offset, ops[index]);
+    *offset += strlen(ops[index]);
 }
 
 __attribute__((unused))
-static size_t gen_reg(char *buf, size_t buf_size, size_t offset) {
+static void gen_reg(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success) {
     static const char *regs[] = {
         "$0", "ra", "sp", "gp", "tp", "t0", "t1", "t2",
         "s0", "s1", "a0", "a1", "a2", "a3", "a4", "a5",
         "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7",
         "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"
     };
+
     int index = random_int(ARRLEN(regs));
     int len = strlen(regs[index]) + 1;
-    if (buf_size - offset - 1 < len) {
-        return 0;
+
+    if (len > buf_size - *offset - 1) {
+        *success = false;
+        return;
     }
-    sprintf(buf + offset, "$%s", regs[index]);
-    return len;
+
+    sprintf(buf + *offset, "$%s", regs[index]);
+    *offset += len;
+    sprintf(calc_buf + *calc_offset, "0");
+    *calc_offset += 1;
 }
 
 __attribute__((unused))
-static size_t gen_addr(char *buf, size_t buf_size, size_t offset) {
-    static const u_int32_t min = 0x80000000;
-    static const u_int32_t max = 0x87ffffff;
-    static const int len = 10;
-    if (buf_size - offset - 1 < len) {
-        return 0;
+static void gen_addr(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success) {
+    if (buf_size - *offset - 1 < 4) {
+        *success = false;
+        return;
     }
-    sprintf(buf + offset, "0x%x", random_int_range(min, max + 1));
-    return len;
+
+    sprintf(buf + *offset, "*(");
+    *offset += strlen(buf + *offset);
+    sprintf(calc_buf + *calc_offset, "vaddr_read(");
+    *calc_offset += strlen(calc_buf + *calc_offset);
+
+    *success = true;
+    do {
+        gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+    } while (!*success);
+    buf[(*offset)++] = ')';
+    calc_buf[*(calc_offset)++] = ')';
+    (*offset)++;
+    (*calc_offset)++;
 }
 
 __attribute__((unused))
-static size_t gen_left_paran(char *buf, size_t buf_size, size_t offset) {
-    if (buf_size - offset - 1 < 1) {
-        return 0;
+static void gen_left_paran(char *buf, size_t buf_size, size_t *offset, bool *success) {
+    if (buf_size - *offset - 1 < 1) {
+        *success = false;
+        return;
     }
-    buf[offset] = '(';
-    buf[offset + 1] = '\0';
-    return 1;
+    buf[*offset] = '(';
+    buf[*offset + 1] = '\0';
+    (*offset)++;
 }
 
 __attribute__((unused))
-static int gen_right_paran(char *buf, size_t buf_size, size_t offset) {
-    if (buf_size - offset - 1 < 1) {
-        return 0;
+static void gen_right_paran(char *buf, size_t buf_size, size_t *offset, bool *success) {
+    if (buf_size - *offset - 1 < 1) {
+        *success = false;
+        return;
     }
-    buf[offset] = ')';
-    buf[offset + 1] = '\0';
-    return 1;
+    buf[*offset] = ')';
+    buf[*offset + 1] = '\0';
+    (*offset)++;
 }
 
 __attribute__((unused))
-static size_t gen_space(char *buf, size_t buf_size, size_t offset) {
-    int size = buf_size - offset;
-    size = size > 3 ? 3 : size;
+static void gen_space(char *buf, size_t buf_size, size_t *offset) {
+    int size = buf_size - *offset;
+    size = size > 5 ? 5 : size;
     int len = 0;
     if (random_int(2) == 1) {
         len = random_int_range(1, size);
     }
     for (int i = 0; i < len; i++) {
-        buf[offset++] = ' ';
+        buf[*offset++] = ' ';
     }
-    buf[offset] = '\0';
-    return len;
+    buf[*offset] = '\0';
+    *offset += len;
 }
 
 __attribute__((unused))
-static size_t gen(char *buf, size_t buf_size, size_t offset, bool *success) {
+static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success) {
     static int depth = 0;
 
     if (offset >= buf_size - 1) {
@@ -158,55 +188,57 @@ static size_t gen(char *buf, size_t buf_size, size_t offset, bool *success) {
         case 0:
             // printf("choose: 0\n");
             if (depth < 2) {
-                return gen(buf, buf_size, offset, success);
+                return gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             }
             depth -= depth == 0 ? 0 : 1;
-            len += gen_space(buf, buf_size, offset + len);
-            len += gen_decimal(buf, buf_size, offset + len); 
-            len += gen_space(buf, buf_size, offset + len);
+            gen_space(buf, buf_size, offset);
+            gen_decimal(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset); 
+            gen_space(buf, buf_size, offset);
             break;
         case 1:
             // printf("choose: 1\n");
             if (depth < 2) {
-                return gen(buf, buf_size, offset, success);
+                return gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             }
             depth -= depth == 0 ? 0 : 1;
-            len += gen_space(buf, buf_size, offset + len);
-            len += gen_hex(buf, buf_size, offset + len);
-            len += gen_space(buf, buf_size, offset + len);
+            gen_space(buf, buf_size, offset);
+            gen_hex(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset);
+            gen_space(buf, buf_size, offset);
             break;
         case 2:
             // printf("choose: 2\n");
-            len += gen_space(buf, buf_size, offset + len);
-            len += gen_left_paran(buf, buf_size, offset + len);
-            len += gen_space(buf, buf_size, offset + len);
+            gen_space(buf, buf_size, offset);
+            gen_left_paran(buf, buf_size, offset, success);
+            if (!*success) return;
+            gen_space(buf, buf_size, offset);
             depth++;
-            len += gen(buf, buf_size, offset + len, success);
-            len += gen_space(buf, buf_size, offset + len);
-            len += gen_right_paran(buf, buf_size, offset + len);
-            len += gen_space(buf, buf_size, offset + len);
+            gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            if (!*success) return;
+            gen_space(buf, buf_size, offset);
+            gen_right_paran(buf, buf_size, offset, success);
+            if (!*success) return;
+            gen_space(buf, buf_size, offset);
             depth -= depth == 0 ? 0 : 1;
             break;
         case 3:
             // printf("choose: 3\n");
             depth++;
-            len += gen_space(buf, buf_size, offset + len);
-            len += gen(buf, buf_size, offset + len, success);
-            len += gen_space(buf, buf_size, offset + len);
-            len += gen_op(buf, buf_size, offset + len);
-            len += gen_space(buf, buf_size, offset + len);
+            gen_space(buf, buf_size, offset);
+            gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            gen_space(buf, buf_size, offset);
+            gen_op(buf, buf_size, offset);
+            gen_space(buf, buf_size, offset);
             depth++;
-            len += gen(buf, buf_size, offset + len, success);
-            len += gen_space(buf, buf_size, offset + len);
+            gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            gen_space(buf, buf_size, offset);
             depth -= depth == 0 ? 0 : 1;
             break;
         default:
-            return 0;
+            break;
     }
-    return len;
 }
 
-void gen_rand_expr(char *buf, size_t buf_size) {
+void gen_rand_expr(char *buf, size_t buf_size, char *calc_buf, size_t calc_buf_size) {
     // 生成随机表达式的逻辑（原始代码未实现，可后续补充）
     static const size_t lens[] = {1, 10, 100, 1000, 10000};
     int max;
@@ -216,7 +248,11 @@ void gen_rand_expr(char *buf, size_t buf_size) {
 
     size_t size = random_int_range(lens[max - 1], lens[max] + 1);
     bool success = true;
+    size_t offset;
+    size_t calc_offset;
     do {
-        gen(buf, buf_size, 0, &success);
+        offset = 0;
+        calc_offset = 0;
+        gen(buf, buf_size, &offset, calc_buf, calc_buf_size, &calc_offset, &success);
     } while (!success);
 }
