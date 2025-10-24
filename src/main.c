@@ -7,7 +7,7 @@
 #include "../include/expr.h"
 
 static char buf[65536] = {};
-static char code_buf[65536 + ] = {};
+static char code_buf[65536 + 512] = {};
 static char calc_buf[65536] = {};
 static char *code_format =
 "#include <stdio.h>\n"
