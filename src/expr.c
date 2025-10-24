@@ -133,8 +133,8 @@ static void gen_addr(char *buf, size_t buf_size, size_t *offset, char *calc_buf,
 
     if (random_int(2) == 0) {
         u_int32_t addr = random_int_range(min, max + 1);
-        sprintf(buf + *offset, "*%u", addr);
-        *offset += 10;
+        sprintf(buf + *offset, "*0x%x", addr);
+        *offset += 13;
         sprintf(calc_buf + *calc_offset, "(uint32_t)0");
         *calc_offset += 11;
         return;
