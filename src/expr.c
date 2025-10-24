@@ -175,7 +175,6 @@ static void gen_space(char *buf, size_t buf_size, size_t *offset) {
         buf[(*offset)++] = ' ';
     }
     buf[*offset] = '\0';
-    *offset += len;
 }
 
 __attribute__((unused))
