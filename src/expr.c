@@ -160,7 +160,7 @@ static void gen_right_paran(char *buf, size_t buf_size, size_t *offset, char *ca
         return;
     }
     sprintf(buf + (*offset)++, ")");
-    sprintf(calc_buf + (*calc_offset)++, "(");
+    sprintf(calc_buf + (*calc_offset)++, ")");
 }
 
 __attribute__((unused))
