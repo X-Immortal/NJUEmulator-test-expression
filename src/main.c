@@ -12,6 +12,7 @@ static char calc_buf[65536] = {};
 static char *code_format =
 "#include <stdio.h>\n"
 "#include <stdint.h>\n"
+"#include <stdlib.h>\n"
 "uint32_t vaddr_read(uint32_t addr) {\n"
 "  if (addr >= 0x80000000 && addr <= 0x87ffffff) {\n"
 "    return 0;\n"
