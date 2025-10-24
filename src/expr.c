@@ -308,7 +308,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
 
 void gen_rand_expr(char *buf, size_t buf_size, char *calc_buf, size_t calc_buf_size) {
     // 生成随机表达式的逻辑（原始代码未实现，可后续补充）
-    static const size_t lens[] = {1, 10, 100, 1000, 10000};
+    static const size_t lens[] = {2, 11, 101, 1001, 10001};
     int max;
     do {
         max = random_int_range(1, ARRLEN(lens));
