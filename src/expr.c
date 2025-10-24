@@ -123,8 +123,20 @@ static void gen_reg(char *buf, size_t buf_size, size_t *offset, char *calc_buf, 
 
 __attribute__((unused))
 static void gen_addr(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success) {
+    static const u_int32_t min = 0x80000000;
+    static const u_int32_t max = 0x87ffffff; 
+
     if (buf_size - *offset - 1 < 4) {
         *success = false;
+        return;
+    }
+
+    if (random_int(2) == 0) {
+        u_int32_t addr = random_int_range(min, max + 1);
+        sprintf(buf + *offset, "*%u", addr);
+        *offset += 10;
+        sprintf(calc_buf + *calc_offset, "(uint32_t)0");
+        *calc_offset += 11;
         return;
     }
 
