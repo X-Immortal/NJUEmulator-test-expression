@@ -237,27 +237,27 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
 
     size_t len = 0;
     gen_space(buf, buf_size, offset);
-    switch (random_int(7)) {
+    u_int32_t choose = random_int(7);
+    switch (choose) {
         case 0:
-            printf("choose: 0\n");
             if (depth < 2) {
                 gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
                 return;
             }
             depth -= depth == 0 ? 0 : 1;
-            gen_decimal(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset); 
+            gen_decimal(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success); 
+            if (!*success) return;
             break;
         case 1:
-            printf("choose: 1\n");
             if (depth < 2) {
                 gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
                 return;
             }
             depth -= depth == 0 ? 0 : 1;
-            gen_hex(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset);
+            gen_hex(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            if (!*success) return;
             break;
         case 2:
-            printf("choose: 2\n");
             gen_left_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             if (!*success) return;
             gen_space(buf, buf_size, offset);
@@ -270,37 +270,40 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             depth -= depth == 0 ? 0 : 1;
             break;
         case 3:
-            printf("choose: 3\n");
             depth++;
             gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            if (!*success) return;
             gen_space(buf, buf_size, offset);
-            gen_op(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset);
+            gen_op(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            if (!*success) return;
             gen_space(buf, buf_size, offset);
             depth++;
             gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            if (!*success) return;
             depth -= depth == 0 ? 0 : 1;
             break;
         case 4:
-            printf("choose: 4\n");
             if (depth < 2) {
                 gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
                 return;
             }
             gen_reg(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            if (!*success) return;
             break;
         case 5:
-            printf("choose: 5\n");
             gen_addr(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            if (!*success) return;
             break;
         case 6:
-            printf("choose: 6\n");
             gen_div(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            if (!*success) return;
             break;
         default:
             break;
     }
-    puts(buf);
-    printf("offset: %lu\n", *offset);
+    // printf("%lu\n", choose);
+    // puts(buf);
+    // printf("offset: %lu\n", *offset);
     gen_space(buf, buf_size, offset);
 }
 
