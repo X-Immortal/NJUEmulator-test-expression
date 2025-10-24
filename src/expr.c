@@ -40,7 +40,7 @@ static void gen_decimal(char *buf, size_t buf_size, size_t *offset, char *calc_b
     int min = max - 1;
 
     u_int32_t num = random_int_range(range[min], range[max]);
-    printf("decimal: %u\n", num);
+    // printf("decimal: %u\n", num);
     sprintf(buf + *offset, "%u", num);
     *offset += max;
     if (calc_buf_size - *calc_offset - 1 < max + 10) {
@@ -68,7 +68,7 @@ static void gen_hex(char *buf, size_t buf_size, size_t *offset, char *calc_buf, 
     int min = max - 1;
 
     u_int32_t num = random_int_range(range[min], range[max]);
-    printf("hex: %x\n", num);
+    // printf("hex: %x\n", num);
     sprintf(buf + *offset, "(0x%x)", num);
     if (calc_buf_size - *calc_offset - 1 < max + 14) {
         printf("calc full\n");
@@ -170,7 +170,7 @@ static void gen_space(char *buf, size_t buf_size, size_t *offset) {
     if (random_int(2) == 1) {
         len = random_int_range(1, size);
     }
-    printf("gen space: %d\n", len);
+    // printf("gen space: %d\n", len);
     for (int i = 0; i < len; i++) {
         buf[(*offset)++] = ' ';
     }
@@ -189,7 +189,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
     size_t len = 0;
     switch (random_int(4)) {
         case 0:
-            printf("choose: 0\n");
+            // printf("choose: 0\n");
             if (depth < 2) {
                 gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
                 return;
@@ -201,7 +201,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             puts(buf);
             break;
         case 1:
-            printf("choose: 1\n");
+            // printf("choose: 1\n");
             if (depth < 2) {
                 gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
                 return;
@@ -213,7 +213,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             puts(buf);
             break;
         case 2:
-            printf("choose: 2\n");
+            // printf("choose: 2\n");
             gen_space(buf, buf_size, offset);
             gen_left_paran(buf, buf_size, offset, success);
             if (!*success) return;
@@ -229,7 +229,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             puts(buf);
             break;
         case 3:
-            printf("choose: 3\n");
+            // printf("choose: 3\n");
             depth++;
             gen_space(buf, buf_size, offset);
             gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
