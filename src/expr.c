@@ -40,7 +40,7 @@ static void gen_decimal(char *buf, size_t buf_size, size_t *offset, char *calc_b
     int min = max - 1;
 
     u_int32_t num = random_int_range(range[min], range[max]);
-    // printf("decimal: %u\n", num);
+    printf("decimal: %u\n", num);
     sprintf(buf + *offset, "%u", num);
     *offset += max;
     if (calc_buf_size - *calc_offset - 1 < max + 10) {
@@ -68,6 +68,7 @@ static void gen_hex(char *buf, size_t buf_size, size_t *offset, char *calc_buf, 
     int min = max - 1;
 
     u_int32_t num = random_int_range(range[min], range[max]);
+    printf("hex: %x\n", num);
     sprintf(buf + *offset, "(0x%x)", num);
     if (calc_buf_size - *calc_offset - 1 < max + 14) {
         printf("calc full\n");
