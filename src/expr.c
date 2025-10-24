@@ -8,6 +8,7 @@
 #define ARRLEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
 static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success);
+static void gen_space(char *buf, size_t buf_size, size_t *offset);
 
 __attribute__((unused))
 static inline u_int32_t random_int_range(u_int32_t begin, u_int32_t end) {
