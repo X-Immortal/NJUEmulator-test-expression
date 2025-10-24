@@ -243,6 +243,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
         choose = 0;
         depth = 2;
     }
+    printf("choose: %u\n", choose);
     switch (choose) {
         case 0:
             if (depth < 2) {
@@ -299,7 +300,6 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
         default:
             break;
     }
-    printf("choose: %u\n", choose);
     puts(buf);
     printf("offset: %lu\n", *offset);
     gen_space(buf, buf_size, offset);
