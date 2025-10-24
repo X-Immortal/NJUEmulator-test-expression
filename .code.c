@@ -19,7 +19,7 @@ uint32_t minus(uint32_t num) {
   return -num;
 }
 int main() {
-  unsigned result = (minus(divide(minus((uint32_t)0),minus(minus((uint32_t)(0xd))))));
+  unsigned result = (uint32_t)3740;
   printf("%u", result);
   return 0;
 }
