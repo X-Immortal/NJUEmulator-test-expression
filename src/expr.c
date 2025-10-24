@@ -171,7 +171,7 @@ static void gen_space(char *buf, size_t buf_size, size_t *offset) {
     }
     printf("gen space: %d\n", len);
     for (int i = 0; i < len; i++) {
-        buf[*offset++] = ' ';
+        buf[(*offset)++] = ' ';
     }
     buf[*offset] = '\0';
     *offset += len;
