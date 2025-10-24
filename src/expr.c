@@ -208,7 +208,7 @@ static void gen_space(char *buf, size_t buf_size, size_t *offset) {
 
 __attribute__((unused))
 static void gen_div(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success) {
-    if (buf_size - *offset - 1 < 3) {
+    if (buf_size - *offset - 1 < 5) {
         *success = false;
         return;
     }
