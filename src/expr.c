@@ -5,7 +5,7 @@
 #include <limits.h>
 #include "../include/expr.h"
 
-#define DEBUG 0
+#define DEBUG 1
 
 #define ARRLEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
@@ -254,54 +254,90 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
         case 0:
             if (depth < min_depth) {
                 gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, min_depth);
+                depth--;
                 return;
             }
             gen_decimal(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success); 
-            if (!*success) return;
+            if (!*success) {
+                depth--;
+                return;
+            }
             break;
         case 1:
             if (depth < min_depth) {
                 gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, min_depth);
+                depth--;
                 return;
             }
             gen_hex(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
-            if (!*success) return;
+            if (!*success) {
+                depth--;
+                return;
+            }
             break;
         case 2:
             gen_left_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
-            if (!*success) return;
+            if (!*success) {
+                depth--;
+                return;
+            }
             gen_space(buf, buf_size, offset);
             gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, min_depth);
-            if (!*success) return;
+            if (!*success) {
+                depth--;
+                return;
+            }
             gen_space(buf, buf_size, offset);
             gen_right_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
-            if (!*success) return;
+            if (!*success) {
+                depth--;
+                return;
+            }
             break;
         case 3:
             gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, min_depth);
-            if (!*success) return;
+            if (!*success) {
+                depth--;
+                return;
+            }
             gen_space(buf, buf_size, offset);
             gen_op(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
-            if (!*success) return;
+            if (!*success) {
+                depth--;
+                return;
+            }
             gen_space(buf, buf_size, offset);
             gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, min_depth);
-            if (!*success) return;
+            if (!*success) {
+                depth--;
+                return;
+            }
             break;
         case 4:
             if (depth < min_depth) {
                 gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, min_depth);
+                depth--;
                 return;
             }
             gen_reg(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
-            if (!*success) return;
+            if (!*success) {
+                depth--;
+                return;
+            }
             break;
         case 5:
             gen_addr(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
-            if (!*success) return;
+            if (!*success) {
+                depth--;
+                return;
+            }
             break;
         case 6:
             gen_div(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
-            if (!*success) return;
+            if (!*success) {
+                depth--;
+                return;
+            }
             break;
         default:
             break;
