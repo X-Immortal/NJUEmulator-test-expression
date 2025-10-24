@@ -27,7 +27,7 @@ static void gen_decimal(char *buf, size_t buf_size, size_t *offset, char *calc_b
         0, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000, UINT_MAX
     };
 
-    if (buf_size - 1 == offset) {
+    if (buf_size - 1 == *offset) {
         printf("error\n");
         exit(1);
     }
@@ -178,7 +178,7 @@ __attribute__((unused))
 static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success) {
     static int depth = 0;
 
-    if (offset >= buf_size - 1) {
+    if (*offset >= buf_size - 1) {
         *success = false;
         return 0;
     }
