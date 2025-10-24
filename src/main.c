@@ -57,11 +57,11 @@ int main(int argc, char *argv[]) {
     fp = popen("./.expr", "r");
     assert(fp != NULL);
 
-    int result;
-    ret = fscanf(fp, "%d", &result);
+    char result[12] = "";
+    fgets(result, 11, fp);
     pclose(fp);
 
-    printf("%u %s\n", result, buf);
+    printf("%s %s\n", result, buf);
   }
   return 0;
 }
