@@ -25,14 +25,14 @@ static inline u_int32_t random_int(u_int32_t n) {
 }
 
 __attribute__((unused))
-static void gen_decimal(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset) {
+static void gen_decimal(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success) {
     static const u_int32_t range[] = {
         0, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000, UINT_MAX
     };
 
     if (buf_size - 1 == *offset) {
-        printf("error\n");
-        exit(1);
+        *success = false;
+        return;
     }
 
     int max = random_int_range(1, ARRLEN(range));
@@ -53,16 +53,15 @@ static void gen_decimal(char *buf, size_t buf_size, size_t *offset, char *calc_b
 }
 
 __attribute__((unused))
-static void gen_hex(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset) {
+static void gen_hex(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success) {
     static const u_int32_t range[] = {
         0x0, 0x10, 0x100, 0x1000, 0x10000, 0x100000, 0x1000000, 0x10000000, 0xffffffff
     };
     
     int max = random_int_range(1, ARRLEN(range));
     int empty_size = buf_size - *offset - 1;
-    if (empty_size < 4) {
-        buf[*offset] = '0';
-        buf[*offset + 1] = '\0';
+    if (empty_size < 5) {
+        *success = false;
         return;
     }
     max = max + 4 > empty_size ? empty_size - 4 : max;
@@ -81,7 +80,7 @@ static void gen_hex(char *buf, size_t buf_size, size_t *offset, char *calc_buf, 
 }
 
 __attribute__((unused))
-static void gen_op(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset) {
+static void gen_op(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success) {
     static const char *ops[] = {"+", "-", "*", "==", "!=", "&&"};
     int index; 
     size_t empty_space = buf_size - *offset - 1;
@@ -90,6 +89,7 @@ static void gen_op(char *buf, size_t buf_size, size_t *offset, char *calc_buf, s
     } else if (empty_space == 1) {
         index = random_int(4);
     } else {
+        *success = false;
         return;
     }
     strcpy(buf + *offset, ops[index]);
@@ -148,9 +148,16 @@ static void gen_addr(char *buf, size_t buf_size, size_t *offset, char *calc_buf,
     *calc_offset += strlen(calc_buf + *calc_offset);
 
     *success = true;
+    size_t temp_offset = *offset, temp_calc_offset = *calc_offset;
     do {
+        *offset = temp_offset;
+        *calc_offset = temp_calc_offset;
         gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
     } while (!*success);
+    if (buf_size - *offset - 1 < 1) {
+        *success = false;
+        return;
+    }
     sprintf(buf + (*offset)++, ")");
     sprintf(calc_buf + (*calc_offset)++, ")");
 }

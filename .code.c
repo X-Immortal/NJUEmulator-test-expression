@@ -16,7 +16,7 @@ uint32_t divide(uint32_t a, uint32_t b) {
   return a / b;
 }
 int main() {
-  unsigned result = divide(divide((uint32_t)4884!=((uint32_t)0),(uint32_t)0),vaddr_read(divide(vaddr_read(divide((uint32_t)0,divide((vaddr_read((uint32_t)0)==(uint32_t)0-divide(vaddr_read((uint32_t)0)!=divide((uint32_t)(0x7930),((uint32_t)0)),(uint32_t)(0x1eb03))),(uint32_t)(0xa8e)))),(uint32_t)0)))&&(uint32_t)0&&(uint32_t)0&&(uint32_t)(0x6188ad42);
+  unsigned result = (vaddr_read((uint32_t)211+vaddr_read(divide((uint32_t)(0x1975c449),(uint32_t)933))*vaddr_read(divide((uint32_t)(0x5370cd7b),((uint32_t)370825)))+(uint32_t)962293&&(uint32_t)(0x17)*(uint32_t)0));
   printf("%u", result);
   return 0;
 }
