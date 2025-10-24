@@ -143,6 +143,8 @@ static size_t gen_space(char *buf, size_t buf_size, size_t offset) {
 
 __attribute__((unused))
 static size_t gen(char *buf, size_t buf_size, size_t offset, bool *success) {
+    static int depth = 0;
+
     if (offset >= buf_size - 1) {
         *success = false;
         return 0;
@@ -152,10 +154,16 @@ static size_t gen(char *buf, size_t buf_size, size_t offset, bool *success) {
     switch (random_int(4)) {
         case 0:
             // printf("choose: 0\n");
+            if (depth < 2) {
+                return gen(buf, buf_size, offset, success);
+            }
             return gen_decimal(buf, buf_size, offset);
             break;
         case 1:
             // printf("choose: 1\n");
+            if (depth < 2) {
+                return gen(buf, buf_size, offset, success);
+            }
             return gen_hex(buf, buf_size, offset);
             break;
         case 2:
