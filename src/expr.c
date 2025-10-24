@@ -39,7 +39,7 @@ static void gen_decimal(char *buf, size_t buf_size, size_t *offset, char *calc_b
         return;
     }
 
-    int bits = random_int(2) == 0 ? 2 : ARRLEN(range);
+    int bits = random_int(3) == 0 ? 3 : ARRLEN(range);
     int max = random_int_range(1, bits);
     size_t empty_size = buf_size - *offset - 1;
     max = max > empty_size ? empty_size : max;

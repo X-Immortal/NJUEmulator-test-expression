@@ -19,7 +19,7 @@ uint32_t minus(uint32_t num) {
   return -num;
 }
 int main() {
-  unsigned result = (minus((uint32_t)0));
+  unsigned result = minus((uint32_t)50220);
   printf("%u", result);
   return 0;
 }
