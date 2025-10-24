@@ -5,7 +5,7 @@
 #include <limits.h>
 #include "../include/expr.h"
 
-#define DEBUG 0
+#define DEBUG 1
 
 #define ARRLEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
@@ -310,7 +310,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
     printf("offset: %lu\n", *offset);
 #endif
     gen_space(buf, buf_size, offset);
-    depth -= depth == 0 ? 0 : 1;
+    depth--;
 }
 
 void gen_rand_expr(char *buf, size_t buf_size, char *calc_buf, size_t calc_buf_size) {
