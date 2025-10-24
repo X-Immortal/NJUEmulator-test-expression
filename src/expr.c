@@ -39,7 +39,8 @@ static void gen_decimal(char *buf, size_t buf_size, size_t *offset, char *calc_b
         return;
     }
 
-    int max = random_int_range(1, ARRLEN(range));
+    int bits = random_int(3) == 0 ? 3 : ARRLEN(range);
+    int max = random_int_range(1, bits);
     size_t empty_size = buf_size - *offset - 1;
     max = max > empty_size ? empty_size : max;
     int min = max - 1;
@@ -62,7 +63,8 @@ static void gen_hex(char *buf, size_t buf_size, size_t *offset, char *calc_buf, 
         0x0, 0x10, 0x100, 0x1000, 0x10000, 0x100000, 0x1000000, 0x10000000, 0xffffffff
     };
     
-    int max = random_int_range(1, ARRLEN(range));
+    int bits = random_int(3) == 0 ? 3 : ARRLEN(range);
+    int max = random_int_range(1, bits);
     int empty_size = buf_size - *offset - 1;
     if (empty_size < 5) {
         *success = false;
@@ -243,6 +245,35 @@ static void gen_div(char *buf, size_t buf_size, size_t *offset, char *calc_buf, 
     if (!*success) return;
 }
 
+__attribute__((unused))
+static void gen_minus(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success) {
+    if (buf_size - *offset - 1 < 2) {
+        *success = false;
+        return;
+    }
+
+    sprintf(buf + (*offset)++, "-");
+    gen_space(buf, buf_size, offset);
+    sprintf(buf +(*offset)++, "(");
+    sprintf(calc_buf + *calc_offset, "minus(");
+    *calc_offset += strlen(calc_buf + *calc_offset);
+
+    *success = true;
+    size_t temp_offset = *offset, temp_calc_offset = *calc_offset;
+    do {
+        *offset = temp_offset;
+        *calc_offset = temp_calc_offset;
+        gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, 1);
+    } while (!*success);
+    if (buf_size - *offset - 1 < 1) {
+        *success = false;
+        return;
+    }
+    sprintf(buf + (*offset)++, ")");
+    sprintf(calc_buf + (*calc_offset)++, ")");
+}
+
+__attribute__((unused))
 static void gen_max(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success) {
     if (buf_size - *offset - 1 < 10) {
         *success = false;
@@ -301,6 +332,8 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             gen_right_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             break;
         case 3:
+            gen_minus(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            break;
         case 4:
             gen_left_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             CHECK();
