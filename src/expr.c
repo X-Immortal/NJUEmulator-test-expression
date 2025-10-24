@@ -5,6 +5,8 @@
 #include <limits.h>
 #include "../include/expr.h"
 
+#define DEBUG 1
+
 #define ARRLEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
 static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success);
@@ -246,7 +248,9 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
         choose = 0;
         depth = 2;
     }
-    // printf("choose: %u\n", choose);
+#if DEBUG 1
+    printf("choose: %u\n", choose);
+#endif
     switch (choose) {
         case 0:
             if (depth < 2) {
@@ -303,8 +307,10 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
         default:
             break;
     }
-    // puts(buf);
-    // printf("offset: %lu\n", *offset);
+#if DEBUG 1
+    puts(buf);
+    printf("offset: %lu\n", *offset);
+#endif
     gen_space(buf, buf_size, offset);
     depth -= depth == 0 ? 0 : 1;
 }
@@ -318,12 +324,16 @@ void gen_rand_expr(char *buf, size_t buf_size, char *calc_buf, size_t calc_buf_s
     } while (lens[max] > buf_size);
 
     size_t size = random_int_range(lens[max - 1], lens[max] + 1);
-    // printf("size: %lu\n", size);
+#if DEBUG 1
+    printf("size: %lu\n", size);
+#endif
     bool success = true;
     size_t offset;
     size_t calc_offset;
     do {
-        // printf("start\n");
+    #if DEBUG 1
+        printf("start\n");
+    #endif
         offset = 0;
         calc_offset = 0;
         gen(buf, size, &offset, calc_buf, calc_buf_size, &calc_offset, &success);
