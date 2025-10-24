@@ -188,7 +188,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
     }
 
     size_t len = 0;
-    switch (random_int(4)) {
+    switch (random_int(5)) {
         case 0:
             // printf("choose: 0\n");
             if (depth < 2) {
@@ -242,6 +242,10 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             gen_space(buf, buf_size, offset);
             depth -= depth == 0 ? 0 : 1;
             // puts(buf);
+            break;
+        case 4:
+            gen_reg(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            if (!*success) return;
             break;
         default:
             break;
