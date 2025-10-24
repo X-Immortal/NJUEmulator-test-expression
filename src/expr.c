@@ -196,6 +196,7 @@ static void gen_space(char *buf, size_t buf_size, size_t *offset) {
         len = random_int_range(1, size);
     }
 #if DEBUG == 1
+    printf("size: %lu\n", buf_size);
     printf("gen space: %d\n", len);
 #endif
     for (int i = 0; i < len; i++) {
