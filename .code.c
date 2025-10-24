@@ -16,7 +16,7 @@ uint32_t divide(uint32_t a, uint32_t b) {
   return a / b;
 }
 int main() {
-  unsigned result = 0;
+  unsigned result = (0/(0/0/(uint32_t)(0xe0325e)&&(uint32_t)(0x60)))/0;
   printf("%u", result);
   return 0;
 }

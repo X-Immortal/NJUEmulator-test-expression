@@ -81,7 +81,7 @@ static void gen_hex(char *buf, size_t buf_size, size_t *offset, char *calc_buf, 
 
 __attribute__((unused))
 static void gen_op(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset) {
-    static const char *ops[] = {"+", "-", "*", "/", "==", "!=", "&&"};
+    static const char *ops[] = {"+", "-", "*", "==", "!=", "&&"};
     int index; 
     size_t empty_space = buf_size - *offset - 1;
     if (empty_space >= 2) {
