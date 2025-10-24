@@ -126,7 +126,7 @@ static void gen_addr(char *buf, size_t buf_size, size_t *offset, char *calc_buf,
     static const u_int32_t min = 0x80000000;
     static const u_int32_t max = 0x87ffffff; 
 
-    if (buf_size - *offset - 1 < 4) {
+    if (buf_size - *offset - 1 < 13) {
         *success = false;
         return;
     }
@@ -134,7 +134,7 @@ static void gen_addr(char *buf, size_t buf_size, size_t *offset, char *calc_buf,
     if (random_int(2) == 0) {
         u_int32_t addr = random_int_range(min, max + 1);
         sprintf(buf + *offset, "*0x%x", addr);
-        *offset += 13;
+        *offset += 11;
         sprintf(calc_buf + *calc_offset, "(uint32_t)0");
         *calc_offset += 11;
         return;
