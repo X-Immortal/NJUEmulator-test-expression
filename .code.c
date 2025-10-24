@@ -16,7 +16,7 @@ uint32_t divide(uint32_t a, uint32_t b) {
   return a / b;
 }
 int main() {
-  unsigned result = ((uint32_t)0);
+  unsigned result = (vaddr_read(vaddr_read(divide(divide(div    $s7  !=     (0x8ff867)/*0x851f3498     / *0x84834e70    ;
   printf("%u", result);
   return 0;
 }
