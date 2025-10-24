@@ -138,7 +138,7 @@ static void gen_addr(char *buf, size_t buf_size, size_t *offset, char *calc_buf,
         gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
     } while (!*success);
     buf[(*offset)++] = ')';
-    calc_buf[*(calc_offset)++] = ')';
+    calc_buf[(*calc_offset)++] = ')';
     (*offset)++;
     (*calc_offset)++;
 }
