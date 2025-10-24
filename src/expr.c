@@ -206,6 +206,7 @@ static size_t gen(char *buf, size_t buf_size, size_t offset, bool *success) {
         default:
             return 0;
     }
+    return 0;
 }
 
 void gen_rand_expr(char *buf, size_t buf_size) {
