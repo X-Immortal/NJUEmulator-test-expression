@@ -303,8 +303,8 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
         default:
             break;
     }
-    puts(buf);
-    printf("offset: %lu\n", *offset);
+    // puts(buf);
+    // printf("offset: %lu\n", *offset);
     gen_space(buf, buf_size, offset);
     depth -= depth == 0 ? 0 : 1;
 }
@@ -323,7 +323,7 @@ void gen_rand_expr(char *buf, size_t buf_size, char *calc_buf, size_t calc_buf_s
     size_t offset;
     size_t calc_offset;
     do {
-        printf("start\n");
+        // printf("start\n");
         offset = 0;
         calc_offset = 0;
         gen(buf, size, &offset, calc_buf, calc_buf_size, &calc_offset, &success);
