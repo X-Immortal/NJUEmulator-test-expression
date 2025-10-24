@@ -244,10 +244,10 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
     size_t len = 0;
     gen_space(buf, buf_size, offset);
     u_int32_t choose = random_int(7);
-    if (buf_size < 10) {
-        choose = 0;
-        depth = 2;
-    }
+    // if (buf_size < 10) {
+    //     choose = 0;
+    //     depth = 2;
+    // }
 #if DEBUG == 1
     printf("choose: %u\n", choose);
 #endif
