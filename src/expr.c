@@ -250,6 +250,8 @@ static void gen_max(char *buf, size_t buf_size, size_t *offset, char *calc_buf, 
     }
     sprintf(buf + *offset, "%u", UINT_MAX);
     sprintf(calc_buf + *calc_offset, "%u", UINT_MAX);
+    *offset += 10;
+    *calc_offset += 10;
 }
 
 __attribute__((unused))
