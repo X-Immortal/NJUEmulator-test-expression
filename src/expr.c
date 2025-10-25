@@ -297,7 +297,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
     depth++;
     size_t len = 0;
     gen_space(buf, buf_size, offset);
-    u_int32_t choose = random_int(10);
+    u_int32_t choose = random_int(20);
     
     if (buf_size - *offset - 1 < 5) choose = 0;
     
@@ -307,6 +307,8 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
 
     switch (choose) {
         case 0:
+        case 16:
+        case 18:
             if (depth < min_depth) {
                 gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, min_depth);
                 depth--;
@@ -315,6 +317,8 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             gen_decimal(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success); 
             break;
         case 1:
+        case 14:
+        case 19:
             if (depth < min_depth) {
                 gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, min_depth);
                 depth--;
@@ -323,6 +327,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             gen_hex(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             break;
         case 2:
+        case 15:
             gen_left_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             CHECK();
             gen_space(buf, buf_size, offset);
@@ -335,6 +340,10 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             gen_minus(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             break;
         case 4:
+        case 10:
+        case 11:
+        case 12:
+        case 13:
             gen_left_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             CHECK();
             gen_space(buf, buf_size, offset);
@@ -364,6 +373,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             gen_div(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, false);
             break;
         case 8:
+        case 17:
             gen_div(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, true);
             break;
         case 9:
