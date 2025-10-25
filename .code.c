@@ -19,7 +19,7 @@ uint32_t minus(uint32_t num) {
   return -num;
 }
 int main() {
-  unsigned result = divide(((uint32_t)7032==minus(vaddr_read((uint32_t)0))),(uint32_t)(0x805232));
+  unsigned result = divide((uint32_t)(0xa52b9),divide(((uint32_t)4294967295),(uint32_t)200185166));
   printf("%u", result);
   return 0;
 }

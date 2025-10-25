@@ -288,6 +288,7 @@ static void gen_max(char *buf, size_t buf_size, size_t *offset, char *calc_buf, 
     *calc_offset += 20;
 }
 
+
 __attribute__((unused))
 static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success, size_t min_depth) {
     static int depth = 0;
@@ -393,6 +394,67 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
     depth--;
 }
 
+__attribute__((unused))
+static void break_paran(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset) {
+    if (buf_size - *offset - 1 > 0) {
+        sprintf(buf + (*offset)++, ")");
+    } else {
+        char *p = strchr(buf, ')');
+        if (p == NULL) {
+            return;
+        }
+        *p = ' ';
+    }
+    sprintf(calc_buf, "invalid()");
+    *calc_offset = 9;
+}
+
+__attribute__((unused))
+static void make_invalid_op(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset) {
+    if (buf_size - *offset - 1 > 0) {
+        sprintf(buf + (*offset)++, "+");
+    } else {
+        char *p = strchr(buf, ' ');
+        if (p == NULL) {
+            return;
+        }
+        *p = '/';
+    }
+    sprintf(calc_buf, "invalid()");
+    *calc_offset = 9;
+}
+
+__attribute__((unused))
+static void make_invalid_char(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset) {
+    char *p = NULL;
+    for (int i = 0; i < 10 && !p; i++) {
+        p = strchr(buf, '0' + i);
+    }
+    if (p == NULL) {
+        return;
+    }
+    *p = random_int_range('g', 'x');
+    sprintf(calc_buf, "invalid()");
+    *calc_offset = 9;
+}
+
+__attribute__((unused))
+static void make_invalid(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset) {
+    switch (random_int(3)) {
+        case 0:
+            break_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset);
+            break;
+        case 1:
+            make_invalid_op(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset);
+            break;
+        case 2:
+            make_invalid_char(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset);
+            break;
+        default:
+            break;
+    }
+}
+
 void gen_rand_expr(char *buf, size_t buf_size, char *calc_buf, size_t calc_buf_size) {
     // 生成随机表达式的逻辑（原始代码未实现，可后续补充）
     static const size_t lens[] = {2, 11, 101, 1001, 10001};
@@ -420,4 +482,8 @@ void gen_rand_expr(char *buf, size_t buf_size, char *calc_buf, size_t calc_buf_s
         calc_offset = 0;
         gen(buf, size, &offset, calc_buf, calc_buf_size, &calc_offset, &success, min_depth);
     } while (!success);
+
+    if (random_int(8) == 0) {
+        make_invalid(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset);
+    }
 }
