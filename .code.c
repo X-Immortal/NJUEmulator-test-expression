@@ -18,8 +18,11 @@ uint32_t divide(uint32_t a, uint32_t b) {
 uint32_t minus(uint32_t num) {
   return -num;
 }
-int main() {
-  unsigned result = divide((uint32_t)(0xa52b9),divide(((uint32_t)4294967295),(uint32_t)200185166));
+uint32_t invalid() {
+  printf("invalid");
+  exit(0);
+}int main() {
+  unsigned result = invalid();
   printf("%u", result);
   return 0;
 }

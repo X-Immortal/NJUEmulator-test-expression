@@ -433,7 +433,7 @@ static void make_invalid_char(char *buf, size_t buf_size, size_t *offset, char *
     if (p == NULL) {
         return;
     }
-    *p = random_int_range('g', 'x');
+    *p = '_';
     sprintf(calc_buf, "invalid()");
     *calc_offset = 9;
 }
