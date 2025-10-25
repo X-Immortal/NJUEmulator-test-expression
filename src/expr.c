@@ -343,6 +343,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
         case 4:
         case 10:
         case 11:
+        case 12:
             gen_left_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             CHECK();
             gen_space(buf, buf_size, offset);
@@ -379,7 +380,6 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             gen_div(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, true);
             break;
         case 9:
-        case 12:
             gen_max(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             break;
         default:
