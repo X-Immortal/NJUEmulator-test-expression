@@ -308,7 +308,6 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
     switch (choose) {
         case 0:
         case 16:
-        case 18:
             if (depth < min_depth) {
                 gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, min_depth);
                 depth--;
@@ -318,7 +317,6 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             break;
         case 1:
         case 14:
-        case 19:
             if (depth < min_depth) {
                 gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, min_depth);
                 depth--;
@@ -327,7 +325,6 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             gen_hex(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             break;
         case 2:
-        case 15:
             gen_left_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             CHECK();
             gen_space(buf, buf_size, offset);
@@ -337,14 +334,12 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             gen_right_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             break;
         case 3:
+        case 15:
             gen_minus(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             break;
         case 4:
         case 10:
         case 11:
-        case 12:
-        case 13:
-        case 17:
             gen_left_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             CHECK();
             gen_space(buf, buf_size, offset);
@@ -360,6 +355,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             gen_right_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             break;
         case 5:
+        case 13:
             if (depth < min_depth) {
                 gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, min_depth);
                 depth--;
@@ -368,15 +364,19 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             gen_reg(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             break;
         case 6:
+        case 17:
             gen_addr(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             break;
         case 7:
             gen_div(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, false);
             break;
         case 8:
+        case 18:
+        case 19:
             gen_div(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, true);
             break;
         case 9:
+        case 12:
             gen_max(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             break;
         default:
