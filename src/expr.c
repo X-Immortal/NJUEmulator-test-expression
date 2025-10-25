@@ -39,8 +39,8 @@ static void gen_decimal(char *buf, size_t buf_size, size_t *offset, char *calc_b
         return;
     }
 
-    int bits = random_int(3) == 0 ? 3 : ARRLEN(range);
-    int max = random_int_range(1, bits);
+    // int bits = random_int(3) == 0 ? 3 : ARRLEN(range);
+    int max = random_int_range(1, ARRLEN(range));
     size_t empty_size = buf_size - *offset - 1;
     max = max > empty_size ? empty_size : max;
     int min = max - 1;
@@ -344,6 +344,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
         case 11:
         case 12:
         case 13:
+        case 17:
             gen_left_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             CHECK();
             gen_space(buf, buf_size, offset);
@@ -373,7 +374,6 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             gen_div(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, false);
             break;
         case 8:
-        case 17:
             gen_div(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, true);
             break;
         case 9:
