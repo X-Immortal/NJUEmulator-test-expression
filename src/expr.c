@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <limits.h>
+#include <sys/random.h>
 #include "../include/expr.h"
 
 #define DEBUG 0
@@ -20,7 +21,9 @@ static inline u_int32_t random_int_range(u_int32_t begin, u_int32_t end) {
         printf("Invalid range: from %u to %u\n", begin, end);
         return 0;
     }
-    return ((u_int32_t) rand() % (end - begin)) + begin;
+    u_int32_t rand_num;
+    getrandom(&rand_num, sizeof(rand_num), 0);
+    return ((u_int32_t) rand_num % (end - begin)) + begin;
 }
 
 __attribute__((unused))
