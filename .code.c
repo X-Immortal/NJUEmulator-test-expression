@@ -19,7 +19,7 @@ uint32_t minus(uint32_t num) {
   return -num;
 }
 int main() {
-  unsigned result = (uint32_t)4294967295;
+  unsigned result = (divide(divide((uint32_t)969543907,(uint32_t)64),(uint32_t)362989)*((uint32_t)0));
   printf("%u", result);
   return 0;
 }
