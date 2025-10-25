@@ -374,12 +374,12 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             break;
         case 8:
         case 18:
-        case 19:
             gen_div(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success, true);
             break;
         case 9:
         case 17:
         case 13:
+        case 19:
             gen_max(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             break;
         default:
