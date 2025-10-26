@@ -407,6 +407,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
         } else {
             buf[left] = ' ';
+            sprintf(calc_buf + (*calc_offset)++, ")");
         }
     }
 }
