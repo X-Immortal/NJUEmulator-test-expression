@@ -22,7 +22,7 @@ uint32_t invalid() {
   printf("invalid");
   exit(0);
 }int main() {
-  unsigned result = minus((uint32_t)31);
+  unsigned result = invalid();
   printf("%u", result);
   return 0;
 }

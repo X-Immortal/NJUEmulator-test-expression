@@ -33,7 +33,7 @@ static char *code_format =
 "uint32_t invalid() {\n"
 "  printf(\"invalid\");\n"
 "  exit(0);\n"
-"}"
+"}\n"
 "int main() {\n"
 "  unsigned result = %s;\n"
 "  printf(\"%%u\", result);\n"

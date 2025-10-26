@@ -151,18 +151,17 @@ static void gen_addr(char *buf, size_t buf_size, size_t *offset, char *calc_buf,
     }
 
     sprintf(buf + (*offset)++, "*");
+
     gen_space(buf, buf_size, offset);
     sprintf(buf +(*offset)++, "(");
     sprintf(calc_buf + *calc_offset, "vaddr_read(");
     *calc_offset += strlen(calc_buf + *calc_offset);
 
-    *success = true;
-    size_t temp_offset = *offset, temp_calc_offset = *calc_offset;
-    do {
-        *offset = temp_offset;
-        *calc_offset = temp_calc_offset;
-        gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
-    } while (!*success);
+    gen_space(buf, buf_size, offset);
+    gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+    if (!*success) return;
+
+    gen_space(buf, buf_size, offset);
     if (buf_size - *offset - 1 < 1) {
         *success = false;
         return;
@@ -273,23 +272,25 @@ static void gen_minus(char *buf, size_t buf_size, size_t *offset, char *calc_buf
     }
 
     sprintf(buf + (*offset)++, "-");
-    gen_space(buf, buf_size, offset);
-    sprintf(buf +(*offset)++, "(");
     sprintf(calc_buf + *calc_offset, "minus(");
-    *calc_offset += strlen(calc_buf + *calc_offset);
+    *calc_offset += 6;
 
-    *success = true;
-    size_t temp_offset = *offset, temp_calc_offset = *calc_offset;
-    do {
-        *offset = temp_offset;
-        *calc_offset = temp_calc_offset;
+    if (random_int(2) == 0) {
+        gen_decimal(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+        if (!*success) return;
+    } else {
+        gen_space(buf, buf_size, offset);
+        gen_left_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+        if (!*success) return;
+
+        gen_space(buf, buf_size, offset);
         gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
-    } while (!*success);
-    if (buf_size - *offset - 1 < 1) {
-        *success = false;
-        return;
+        if (!*success) return;
+
+        gen_space(buf, buf_size, offset);
+        gen_right_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
     }
-    sprintf(buf + (*offset)++, ")");
+
     sprintf(calc_buf + (*calc_offset)++, ")");
 }
 
