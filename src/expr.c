@@ -8,6 +8,13 @@
 #define DEBUG 0
 
 #define ARRLEN(arr) (sizeof(arr) / sizeof(arr[0]))
+#define CHECK_SPACE(n) \
+do {\
+    if (buf_size < offset + 1 + (n)) {\
+        success = false;\
+        return;\
+    }\
+}while(0)
 
 static void gen();
 
@@ -36,9 +43,9 @@ static inline u_int32_t random_int(u_int32_t n) {
 
 __attribute__((unused))
 static void gen_space() {
-    int size = buf_size - offset - 2;
-    if (size <= 0) return;
+    if (buf_size <= offset + 2) return;
 
+    int size = buf_size - offset - 2;
     size = size > 5 ? 5 : size;
     int len = 0;
     if (random_int(2) == 1) {
@@ -62,12 +69,9 @@ static void gen_decimal() {
         100000000, 1000000000, UINT_MAX
     };
 
-    size_t empty_size = buf_size - offset - 1;
-    if (empty_size == 0) {
-        success = false;
-        return;
-    }
+    CHECK_SPACE(1);
 
+    size_t empty_size = buf_size - offset - 1;
     int max = random_int_range(1, ARRLEN(range));
     max = max > empty_size ? empty_size : max;
     int min = max - 1;
@@ -87,12 +91,9 @@ static void gen_hex() {
         0x1000000, 0x10000000, 0xffffffff
     };
     
-    int empty_size = buf_size - offset - 1;
-    if (empty_size < 5) {
-        success = false;
-        return;
-    }
+    CHECK_SPACE(5);
 
+    int empty_size = buf_size - offset - 1;
     int max = random_int_range(1, ARRLEN(range));
     max = max + 4 > empty_size ? empty_size - 4 : max;
     int min = max - 1;
@@ -108,13 +109,10 @@ __attribute__((unused))
 static void gen_op() {
     static const char *ops[] = {"+", "-", "*", "==", "!=", "&&"};
 
-    size_t empty_size = buf_size - offset - 1;
-    if (empty_size == 0) {
-        success = false;
-        return;
-    }
+    CHECK_SPACE(1);
 
     int index; 
+    size_t empty_size = buf_size - offset - 1;
     if (empty_size >= 2) {
         index = random_int(ARRLEN(ops));
     } else if (empty_size == 1) {
@@ -130,10 +128,7 @@ static void gen_op() {
 
 __attribute__((unused))
 static void gen_left_paren() {
-    if (buf_size - offset - 1 < 1) {
-        success = false;
-        return;
-    }
+    CHECK_SPACE(1);
 
     sprintf(buf + offset++, "(");
     sprintf(calc_buf + calc_offset++, "(");
@@ -141,10 +136,7 @@ static void gen_left_paren() {
 
 __attribute__((unused))
 static void gen_right_paren() {
-    if (buf_size - offset - 1 < 1) {
-        success = false;
-        return;
-    }
+    CHECK_SPACE(1);
 
     sprintf(buf + offset++, ")");
     sprintf(calc_buf + calc_offset++, ")");
@@ -162,10 +154,7 @@ static void gen_reg() {
     int index = random_int(ARRLEN(regs));
     int len = strlen(regs[index]) + 1;
 
-    if (len > buf_size - offset - 1) {
-        success = false;
-        return;
-    }
+    CHECK_SPACE(len);
 
     sprintf(buf + offset, "$%s", regs[index]);
     offset += len;
@@ -178,10 +167,7 @@ static void gen_addr() {
     static const u_int32_t min = 0x80000000;
     static const u_int32_t max = 0x87ffffff; 
 
-    if (buf_size - offset - 1 < 13) {
-        success = false;
-        return;
-    }
+    CHECK_SPACE(13);
 
     if (random_int(2) == 0) {
         u_int32_t addr = random_int_range(min, max + 1);
@@ -209,10 +195,7 @@ static void gen_addr() {
 
 __attribute__((unused))
 static void gen_div() {
-    if (buf_size - offset - 1 < 5) {
-        success = false;
-        return;
-    }
+    CHECK_SPACE(5);
 
     sprintf(calc_buf + calc_offset, "divide");
     calc_offset += 6;
@@ -262,10 +245,7 @@ static void gen_div() {
 
 __attribute__((unused))
 static void gen_minus() {
-    if (buf_size - offset - 1 < 2) {
-        success = false;
-        return;
-    }
+    CHECK_SPACE(2);
 
     sprintf(buf + offset++, "-");
     sprintf(calc_buf + calc_offset, "minus(");
@@ -292,10 +272,7 @@ static void gen_minus() {
 
 __attribute__((unused))
 static void gen_max() {
-    if (buf_size - offset - 1 < 14) {
-        success = false;
-        return;
-    }
+    CHECK_SPACE(14);
 
     sprintf(buf + offset, "(%u+1)", UINT_MAX);
     sprintf(calc_buf + calc_offset, "((uint32_t)%u+(uint32_t)1)", UINT_MAX);
@@ -305,10 +282,7 @@ static void gen_max() {
 
 __attribute__((unused))
 static void gen_min() {
-    if (buf_size - offset - 1 < 5) {
-        success = false;
-        return;
-    }
+    CHECK_SPACE(5);
 
     sprintf(buf + offset, "(0-1)");
     sprintf(calc_buf + calc_offset, "((uint32_t)0-(uint32_t)1)");
@@ -318,10 +292,7 @@ static void gen_min() {
 
 __attribute__((unused))
 static void gen_minus_minus() {
-    if (buf_size - offset - 1 < 3) {
-        success = false;
-        return;
-    }
+    CHECK_SPACE(3);
 
     sprintf(buf + offset, "--1");
     offset += 3;
@@ -422,7 +393,7 @@ static void gen() {
 
 __attribute__((unused))
 static void break_paren() {
-    if (buf_size - offset - 1 > 0) {
+    if (buf_size > offset + 1) {
         sprintf(buf + offset++, ")");
     } else {
         char *p = strchr(buf, ')');
@@ -437,7 +408,7 @@ static void break_paren() {
 
 __attribute__((unused))
 static void make_invalid_op() {
-    if (buf_size - offset - 1 > 0) {
+    if (buf_size > offset + 1) {
         sprintf(buf + offset++, "+");
     } else {
         char *p = strchr(buf, ' ');
