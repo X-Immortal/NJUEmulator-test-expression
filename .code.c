@@ -22,7 +22,7 @@ uint32_t invalid() {
   printf("invalid");
   exit(0);
 }int main() {
-  unsigned result = invalid();
+  unsigned result = divide(((uint32_t)0-(uint32_t)4294967295),(uint32_t)1016505087);
   printf("%u", result);
   return 0;
 }
