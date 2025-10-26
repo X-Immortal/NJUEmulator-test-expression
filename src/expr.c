@@ -515,6 +515,6 @@ void gen_rand_expr(char *buf_, size_t buf_size_, char *calc_buf_, size_t calc_bu
     } while (!success);
 
     if (random_int(8) == 0) {
-        make_invalid(buf, buf_size, &offset, calc_buf, calc_buf_size, &calc_offset);
+        make_invalid();
     }
 }
