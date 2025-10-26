@@ -6,13 +6,15 @@
 #include <sys/random.h>
 #include "../include/expr.h"
 
-#define DEBUG 1
+#define DEBUG 0
 
 #define ARRLEN(arr) (sizeof(arr) / sizeof(arr[0]))
 #define CHECK() do{if (!*success) {depth = 0;return;}}while(0)
 
 static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success);
 static void gen_space(char *buf, size_t buf_size, size_t *offset);
+static void gen_left_paren(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success);
+static void gen_right_paren(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success);
 
 __attribute__((unused))
 static inline u_int32_t random_int_range(u_int32_t begin, u_int32_t end) {
@@ -151,27 +153,23 @@ static void gen_addr(char *buf, size_t buf_size, size_t *offset, char *calc_buf,
     }
 
     sprintf(buf + (*offset)++, "*");
+    sprintf(calc_buf + *calc_offset, "vaddr_read");
+    *calc_offset += 10;
 
     gen_space(buf, buf_size, offset);
-    sprintf(buf +(*offset)++, "(");
-    sprintf(calc_buf + *calc_offset, "vaddr_read(");
-    *calc_offset += strlen(calc_buf + *calc_offset);
+    gen_left_paren(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+    if (!*success) return;
 
     gen_space(buf, buf_size, offset);
     gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
     if (!*success) return;
 
     gen_space(buf, buf_size, offset);
-    if (buf_size - *offset - 1 < 1) {
-        *success = false;
-        return;
-    }
-    sprintf(buf + (*offset)++, ")");
-    sprintf(calc_buf + (*calc_offset)++, ")");
+    gen_right_paren(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
 }
 
 __attribute__((unused))
-static void gen_left_paran(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success) {
+static void gen_left_paren(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success) {
     if (buf_size - *offset - 1 < 1) {
         *success = false;
         return;
@@ -181,7 +179,7 @@ static void gen_left_paran(char *buf, size_t buf_size, size_t *offset, char *cal
 }
 
 __attribute__((unused))
-static void gen_right_paran(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t clac_buf_size, size_t *calc_offset, bool *success) {
+static void gen_right_paren(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t clac_buf_size, size_t *calc_offset, bool *success) {
     if (buf_size - *offset - 1 < 1) {
         *success = false;
         return;
@@ -220,11 +218,11 @@ static void gen_div(char *buf, size_t buf_size, size_t *offset, char *calc_buf, 
     sprintf(calc_buf + *calc_offset, "divide");
     *calc_offset += 6;
 
-    gen_left_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+    gen_left_paren(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
     if (!*success) return;
 
     gen_space(buf, buf_size, offset);
-    gen_left_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+    gen_left_paren(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
     if (!*success) return;
 
     gen_space(buf, buf_size, offset);
@@ -232,7 +230,7 @@ static void gen_div(char *buf, size_t buf_size, size_t *offset, char *calc_buf, 
     if (!*success) return;
 
     gen_space(buf, buf_size, offset);
-    gen_right_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+    gen_right_paren(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
     if (!*success) return;
 
     gen_space(buf, buf_size, offset);
@@ -248,7 +246,7 @@ static void gen_div(char *buf, size_t buf_size, size_t *offset, char *calc_buf, 
     if (non_zero) {
         gen_decimal(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
     } else {
-        gen_left_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+        gen_left_paren(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
         if (!*success) return;
 
         gen_space(buf, buf_size, offset);
@@ -256,12 +254,12 @@ static void gen_div(char *buf, size_t buf_size, size_t *offset, char *calc_buf, 
         if (!*success) return;
 
         gen_space(buf, buf_size, offset);
-        gen_right_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+        gen_right_paren(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
     }
     if (!*success) return;
 
     gen_space(buf, buf_size, offset);
-    gen_right_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+    gen_right_paren(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
 }
 
 __attribute__((unused))
@@ -280,7 +278,7 @@ static void gen_minus(char *buf, size_t buf_size, size_t *offset, char *calc_buf
         if (!*success) return;
     } else {
         gen_space(buf, buf_size, offset);
-        gen_left_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+        gen_left_paren(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
         if (!*success) return;
 
         gen_space(buf, buf_size, offset);
@@ -288,7 +286,7 @@ static void gen_minus(char *buf, size_t buf_size, size_t *offset, char *calc_buf
         if (!*success) return;
 
         gen_space(buf, buf_size, offset);
-        gen_right_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+        gen_right_paren(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
     }
 
     sprintf(calc_buf + (*calc_offset)++, ")");
@@ -348,13 +346,13 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             gen_hex(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             break;
         case 2:
-            gen_left_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            gen_left_paren(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             CHECK();
             gen_space(buf, buf_size, offset);
             gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             CHECK();
             gen_space(buf, buf_size, offset);
-            gen_right_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            gen_right_paren(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             break;
         case 3:
         case 15:
@@ -413,7 +411,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
 }
 
 __attribute__((unused))
-static void break_paran(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset) {
+static void break_paren(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset) {
     if (buf_size - *offset - 1 > 0) {
         sprintf(buf + (*offset)++, ")");
     } else {
@@ -460,7 +458,7 @@ __attribute__((unused))
 static void make_invalid(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset) {
     switch (random_int(3)) {
         case 0:
-            break_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset);
+            break_paren(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset);
             break;
         case 1:
             make_invalid_op(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset);
