@@ -44,20 +44,14 @@ static void gen_decimal(char *buf, size_t buf_size, size_t *offset, char *calc_b
         return;
     }
 
-    // int bits = random_int(3) == 0 ? 3 : ARRLEN(range);
     int max = random_int_range(1, ARRLEN(range));
     size_t empty_size = buf_size - *offset - 1;
     max = max > empty_size ? empty_size : max;
     int min = max - 1;
 
     u_int32_t num = random_int_range(range[min], range[max]);
-    // printf("decimal: %u\n", num);
     sprintf(buf + *offset, "%u", num);
     *offset += max;
-    if (calc_buf_size - *calc_offset - 1 < max + 10) {
-        printf("calc full\n");
-        exit(1);
-    }
     sprintf(calc_buf + *calc_offset, "(uint32_t)%u", num);
     *calc_offset += max + 10;
 }
@@ -398,6 +392,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
     puts(buf);
     printf("offset: %lu\n", *offset);
 #endif
+    CHECK();
     gen_space(buf, buf_size, offset);
     depth -= depth == 0 ? 0 : 1;
 
