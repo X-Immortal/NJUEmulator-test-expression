@@ -224,19 +224,31 @@ static void gen_div(char *buf, size_t buf_size, size_t *offset, char *calc_buf, 
     gen_left_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
     if (!*success) return;
 
-    *success = true;
+    gen_space(buf, buf_size, offset);
+    gen_left_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+    if (!*success) return;
+
+    gen_space(buf, buf_size, offset);
     gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
     if (!*success) return;
 
     gen_space(buf, buf_size, offset);
-    if (buf_size - *offset - 1 < 2) {
+    gen_right_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+    if (!*success) return;
+
+    gen_space(buf, buf_size, offset);
+    if (buf_size - *offset - 1 < 1) {
         *success = false;
         return;
     }
     sprintf(buf + (*offset)++, "/");
     sprintf(calc_buf + (*calc_offset)++, ",");
+
     gen_space(buf, buf_size, offset);
-    
+    gen_left_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+    if (!*success) return;
+
+    gen_space(buf, buf_size, offset);
     if (non_zero) {
         gen_decimal(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
     } else {
@@ -244,8 +256,12 @@ static void gen_div(char *buf, size_t buf_size, size_t *offset, char *calc_buf, 
     }
     if (!*success) return;
 
+    gen_space(buf, buf_size, offset);
     gen_right_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
     if (!*success) return;
+
+    gen_space(buf, buf_size, offset);
+    gen_right_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
 }
 
 __attribute__((unused))
@@ -393,14 +409,8 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
 
     if (depth == 0 && buf_size - *offset - 1 > 10) {
         CHECK();
-        size_t index = *offset;
-        size_t calc_index = *calc_offset;
-        do {
-            *offset = index;
-            *calc_offset = calc_index;
-            gen_op(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
-            CHECK();
-        } while (buf[*offset - 1] == '*');
+        gen_op(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+        CHECK();
         gen_space(buf, buf_size, offset);
         gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
     }
