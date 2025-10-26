@@ -466,7 +466,6 @@ void gen_rand_expr(char *buf_, size_t buf_size_, char *calc_buf_, size_t calc_bu
     // 生成随机表达式的逻辑（原始代码未实现，可后续补充）
     static const size_t lens[] = {2, 11, 101, 1001, 10001};
 
-    init(buf_, buf_size_, calc_buf_, calc_buf_size_);
 
     int max;
     do {
@@ -474,6 +473,7 @@ void gen_rand_expr(char *buf_, size_t buf_size_, char *calc_buf_, size_t calc_bu
     } while (lens[max] > buf_size);
 
     size_t size = random_int_range(lens[max - 1], lens[max] + 1);
+    init(buf_, size, calc_buf_, calc_buf_size_);
 
     do {
 #if DEBUG == 1
