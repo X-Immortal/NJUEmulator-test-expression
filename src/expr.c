@@ -303,7 +303,7 @@ static void gen_min(char *buf, size_t buf_size, size_t *offset, char *calc_buf, 
 __attribute__((unused))
 static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success) {
     static int depth = 0;
-    static int left = 0;
+    int left = 0;
 
     if (*offset >= buf_size - 1) {
         *success = false;
