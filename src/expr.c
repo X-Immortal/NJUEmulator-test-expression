@@ -278,16 +278,27 @@ static void gen_minus(char *buf, size_t buf_size, size_t *offset, char *calc_buf
 
 __attribute__((unused))
 static void gen_max(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success) {
-    if (buf_size - *offset - 1 < 10) {
+    if (buf_size - *offset - 1 < 14) {
         *success = false;
         return;
     }
-    sprintf(buf + *offset, "%u", UINT_MAX);
-    sprintf(calc_buf + *calc_offset, "(uint32_t)%u", UINT_MAX);
-    *offset += 10;
-    *calc_offset += 20;
+    sprintf(buf + *offset, "(%u+1)", UINT_MAX);
+    sprintf(calc_buf + *calc_offset, "((uint32_t)%u+(uint32_t)1)", UINT_MAX);
+    *offset += 14;
+    *calc_offset += 34;
 }
 
+__attribute__((unused))
+static void gen_min(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success) {
+    if (buf_size - *offset - 1 < 5) {
+        *success = false;
+        return;
+    }
+    sprintf(buf + *offset, "(0-1)");
+    sprintf(calc_buf + *calc_offset, "((uint32_t)0-(uint32_t)1)");
+    *offset += 5;
+    *calc_offset += 25;
+}
 
 __attribute__((unused))
 static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success, size_t min_depth) {
@@ -379,6 +390,8 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             break;
         case 9:
         case 17:
+            gen_min(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            break;
         case 13:
         case 19:
             gen_max(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
