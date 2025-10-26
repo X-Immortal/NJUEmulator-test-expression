@@ -311,6 +311,17 @@ static void gen_min(char *buf, size_t buf_size, size_t *offset, char *calc_buf, 
 }
 
 __attribute__((unused))
+static void gen_minus_minus(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success) {
+    if (buf_size - *offset - 1 < 3) {
+        *success = false;
+        return;
+    }
+    sprintf(buf + *offset, "--1");
+    *offset += 3;
+    sprintf(calc_buf + (*calc_offset)++, "1");
+}
+
+__attribute__((unused))
 static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success) {
     static int depth = 0;
 
@@ -349,6 +360,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             gen_right_paren(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             break;
         case 3:
+            gen_minus_minus(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
         case 15:
             gen_minus(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             break;
