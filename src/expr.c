@@ -485,7 +485,7 @@ void gen_rand_expr(char *buf, size_t buf_size, char *calc_buf, size_t calc_buf_s
     size_t calc_offset;
 
     size_t min_depth = 0;
-    for (size_t temp_size = size; temp_size > 0; temp_size /= 10, min_depth++);
+    for (size_t temp_size = size; temp_size > 0; temp_size /= 10, min_depth += 3);
 
     do {
 #if DEBUG == 1
