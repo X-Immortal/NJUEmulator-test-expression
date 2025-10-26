@@ -311,6 +311,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
 
     if (depth == 0) {
         gen_left_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+        CHECK();
     }
 
     depth++;
