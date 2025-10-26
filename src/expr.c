@@ -391,6 +391,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
 #if DEBUG == 1
     puts(buf);
     printf("offset: %lu\n", *offset);
+    printf("size: %lu\n", buf_size);
 #endif
     CHECK();
     gen_space(buf, buf_size, offset);
@@ -475,9 +476,7 @@ void gen_rand_expr(char *buf, size_t buf_size, char *calc_buf, size_t calc_buf_s
     } while (lens[max] > buf_size);
 
     size_t size = random_int_range(lens[max - 1], lens[max] + 1);
-#if DEBUG == 1
-    printf("size: %lu\n", size);
-#endif
+
     bool success = true;
     size_t offset;
     size_t calc_offset;
