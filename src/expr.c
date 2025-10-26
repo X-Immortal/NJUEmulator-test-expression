@@ -115,7 +115,7 @@ static void gen_op() {
     size_t empty_size = buf_size - offset - 1;
     if (empty_size >= 2) {
         index = random_int(ARRLEN(ops));
-    } else if (empty_size == 1) {
+    } else {
         index = random_int(3);
     }
 
