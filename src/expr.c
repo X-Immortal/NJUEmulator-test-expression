@@ -445,10 +445,10 @@ static void make_invalid(char *buf, size_t buf_size, size_t *offset, char *calc_
             break_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset);
             break;
         case 1:
-            make_invalid_op(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset);
+            // make_invalid_op(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset);
             break;
         case 2:
-            // make_invalid_char(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset);
+            make_invalid_char(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset);
             break;
         default:
             break;
