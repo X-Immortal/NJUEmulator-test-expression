@@ -395,13 +395,15 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
     gen_space(buf, buf_size, offset);
     depth -= depth == 0 ? 0 : 1;
 
-    if (depth == 0 && buf_size - *offset - 1 > 10) {
+    if (depth == 0) {
         gen_right_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
-        gen_space(buf, buf_size, offset);
-        gen_op(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
-        CHECK();
-        gen_space(buf, buf_size, offset);
-        gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+        if (buf_size - *offset - 1 > 10) {
+            gen_space(buf, buf_size, offset);
+            gen_op(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            CHECK();
+            gen_space(buf, buf_size, offset);
+            gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+        }
     }
 }
 
