@@ -6,7 +6,7 @@
 #include <sys/random.h>
 #include "../include/expr.h"
 
-#define DEBUG 1
+#define DEBUG 0
 
 #define ARRLEN(arr) (sizeof(arr) / sizeof(arr[0]))
 #define CHECK() do{if (!*success) {depth = 0;return;}}while(0)
@@ -392,13 +392,14 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
     puts(buf);
     printf("offset: %lu\n", *offset);
 #endif
+    CHECK();
     gen_space(buf, buf_size, offset);
     depth -= depth == 0 ? 0 : 1;
 
     if (depth == 0) {
         gen_right_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
         if (buf_size - *offset - 1 > 10) {
-            gen_space(buf, buf_size, offset);
+            CHECK();
             gen_op(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             CHECK();
             gen_space(buf, buf_size, offset);
