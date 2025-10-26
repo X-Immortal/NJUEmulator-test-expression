@@ -470,7 +470,7 @@ void gen_rand_expr(char *buf_, size_t buf_size_, char *calc_buf_, size_t calc_bu
     int max;
     do {
         max = random_int_range(1, ARRLEN(lens));
-    } while (lens[max] > buf_size);
+    } while (lens[max] > buf_size_);
 
     size_t size = random_int_range(lens[max - 1], lens[max] + 1);
     init(buf_, size, calc_buf_, calc_buf_size_);
