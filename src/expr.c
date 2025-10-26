@@ -477,7 +477,7 @@ void gen_rand_expr(char *buf, size_t buf_size, char *calc_buf, size_t calc_buf_s
 
     size_t size = random_int_range(lens[max - 1], lens[max] + 1);
 
-    bool success = true;
+    bool success;
     size_t offset;
     size_t calc_offset;
 
@@ -485,6 +485,7 @@ void gen_rand_expr(char *buf, size_t buf_size, char *calc_buf, size_t calc_buf_s
 #if DEBUG == 1
         printf("start\n");
 #endif
+        success = true;
         offset = 0;
         calc_offset = 0;
         gen(buf, size, &offset, calc_buf, calc_buf_size, &calc_offset, &success);
