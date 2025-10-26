@@ -6,7 +6,7 @@
 #include <sys/random.h>
 #include "../include/expr.h"
 
-#define DEBUG 0
+#define DEBUG 1
 
 #define ARRLEN(arr) (sizeof(arr) / sizeof(arr[0]))
 #define CHECK() do{if (!*success) {depth = 0;return;}}while(0)
