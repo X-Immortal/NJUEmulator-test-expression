@@ -21,8 +21,9 @@ uint32_t minus(uint32_t num) {
 uint32_t invalid() {
   printf("invalid");
   exit(0);
-}int main() {
-  unsigned result = invalid();
+}
+int main() {
+  unsigned result = (uint32_t)(0x0)-(uint32_t)(0x7b);
   printf("%u", result);
   return 0;
 }
