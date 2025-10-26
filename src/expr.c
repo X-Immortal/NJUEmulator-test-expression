@@ -361,6 +361,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             break;
         case 3:
             gen_minus_minus(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+            break;
         case 15:
             gen_minus(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             break;
