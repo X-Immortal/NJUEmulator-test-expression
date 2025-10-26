@@ -9,7 +9,7 @@
 #define DEBUG 0
 
 #define ARRLEN(arr) (sizeof(arr) / sizeof(arr[0]))
-#define CHECK() do{if (!*success) {depth--;return;}}while(0)
+#define CHECK() do{if (!*success) {depth = 0;return;}}while(0)
 
 static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success);
 static void gen_space(char *buf, size_t buf_size, size_t *offset);
@@ -389,7 +389,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
     printf("offset: %lu\n", *offset);
 #endif
     gen_space(buf, buf_size, offset);
-    depth--;
+    depth -= depth == 0 ? 0 : 1;
 
     if (depth == 0 && buf_size - *offset - 1 > 2) {
         gen_space(buf, buf_size, offset);
