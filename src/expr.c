@@ -361,9 +361,6 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
         case 4:
         case 10:
         case 11:
-            gen_left_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
-            CHECK();
-            gen_space(buf, buf_size, offset);
             gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             CHECK();
             gen_space(buf, buf_size, offset);
@@ -371,9 +368,6 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             CHECK();
             gen_space(buf, buf_size, offset);
             gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
-            CHECK();
-            gen_space(buf, buf_size, offset);
-            gen_right_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
             break;
         case 5:
             gen_reg(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
