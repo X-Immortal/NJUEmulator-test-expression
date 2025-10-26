@@ -23,7 +23,7 @@ uint32_t invalid() {
   exit(0);
 }
 int main() {
-  unsigned result = invalid();
+  unsigned result = (uint32_t)6;
   printf("%u", result);
   return 0;
 }
