@@ -303,6 +303,7 @@ static void gen_min(char *buf, size_t buf_size, size_t *offset, char *calc_buf, 
 __attribute__((unused))
 static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size_t calc_buf_size, size_t *calc_offset, bool *success) {
     static int depth = 0;
+    static int left = 0;
 
     if (*offset >= buf_size - 1) {
         *success = false;
@@ -311,6 +312,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
 
     if (depth == 0) {
         gen_left_paran(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
+        left = *offset - 1;
     }
 
     depth++;
@@ -404,7 +406,7 @@ static void gen(char *buf, size_t buf_size, size_t *offset, char *calc_buf, size
             gen_space(buf, buf_size, offset);
             gen(buf, buf_size, offset, calc_buf, calc_buf_size, calc_offset, success);
         } else {
-            buf[0] = ' ';
+            buf[left] = ' ';
         }
     }
 }
