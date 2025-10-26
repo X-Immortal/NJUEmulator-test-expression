@@ -23,7 +23,7 @@ uint32_t invalid() {
   exit(0);
 }
 int main() {
-  unsigned result = invalid();
+  unsigned result = (uint32_t)63329536&&(uint32_t)745115==((uint32_t)4294967295+(uint32_t)1)==1&&((uint32_t)205)!=((uint32_t)0-(uint32_t)1)==(uint32_t)15-(uint32_t)369467959;
   printf("%u", result);
   return 0;
 }
